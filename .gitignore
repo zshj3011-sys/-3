@@ -42,3 +42,6 @@ desktop-tauri/dist/
 # Lock files (保留 package-lock.json, 去掉其他)
 yarn.lock
 pnpm-lock.yaml
+
+# GitHub Actions workflows (需要单独的 workflow scope 权限才能推送)
+.github/workflows/
