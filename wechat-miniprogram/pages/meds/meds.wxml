@@ -1,0 +1,32 @@
+<!-- 用药提醒 -->
+<view class="meds-page">
+  <view class="hero">
+    <view class="hero-title">💊 今日用药</view>
+    <view class="hero-sub">坚持按时服药 · 已坚持 {{streakDays}} 天</view>
+  </view>
+
+  <view class="meds-list">
+    <view wx:for="{{meds}}" wx:key="id" class="med-card">
+      <view class="med-head">
+        <text class="med-name">{{item.name}}</text>
+        <view class="med-tag tag-{{item.status === 'pending' ? 'yellow' : 'green'}}">
+          {{item.status === 'pending' ? '待服' : '已服'}}
+        </view>
+      </view>
+      <view class="med-info">
+        <text>剂量: {{item.dose}}</text>
+        <text class="dot">·</text>
+        <text>频次: {{item.freq}}</text>
+      </view>
+      <view class="med-bottom">
+        <view class="alarm">⏰ 下次: {{item.nextAlarm}}</view>
+        <view class="remain">剩余 {{item.remain}} 粒</view>
+      </view>
+      <view wx:if="{{item.status === 'pending'}}" class="confirm-btn" data-id="{{item.id}}" bindtap="markTaken">✓ 标记已服用</view>
+    </view>
+  </view>
+
+  <view class="add-med" bindtap="addMed">
+    <text>+ 添加新药品</text>
+  </view>
+</view>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>处方管理 · MedMind Nexus</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="../assets/js/api.js"></script>
+<style>
+  .rx-item{padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center}
+  .rx-item .nm{font-weight:700;font-size:14px}
+  .rx-item .dose{font-size:12px;color:#64748B;margin-top:2px}
+  .check-row{padding:10px;border-radius:8px;display:flex;gap:10px;align-items:flex-start;font-size:13px;margin-bottom:6px}
+  .check-row.ok{background:#F0FDF4;color:#166534;border:1px solid #BBF7D0}
+  .check-row.warn{background:#FFFBEB;color:#92400E;border:1px solid #FDE68A}
+  .check-row.err{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">医生端 · v1.0</div></div></div>
+    <a class="nav" href="workbench.html"><span>🏠</span>工作台</a>
+    <a class="nav" href="consultation.html"><span>🎙️</span>AI 诊间助手</a>
+    <a class="nav" href="records.html"><span>📋</span>病历管理</a>
+    <a class="nav" href="diagnosis.html"><span>🧠</span>AI 诊断辅助</a>
+    <a class="nav active" href="prescription.html"><span>💊</span>处方管理</a>
+    <a class="nav" href="quality.html"><span>✅</span>病历质控</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">医生端 / 处方管理 · AI 辅助开方</div><div class="demo-banner">🔬 演示模式</div><div class="user"><div class="avatar">张</div><div><div style="font-weight:600;font-size:13px">张为民</div><div style="font-size:11px;color:var(--muted)">主任医师</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">💊 处方管理 · AI 辅助开方</h1>
+      <p class="page-sub">患者：李秀芳 · 诊断：不稳定型心绞痛、高血压、高脂血症 · 青霉素过敏</p>
+      <div class="grid" style="grid-template-columns:1.4fr 1fr">
+        <div class="card">
+          <h3><span class="dot"></span> 处方明细<span style="margin-left:auto;font-size:12px;color:#64748B">处方号 RX-2026-0611-3421</span></h3>
+          <div class="rx-item"><div><div class="nm">阿司匹林肠溶片 <span class="tag teal">AI 推荐</span></div><div class="dose">100 mg · 口服 qd · 每日 1 次 · 早餐后</div><div class="dose" style="margin-top:3px;color:#0F766E">💡 抗血小板：ACS 一级预防</div></div><div><input type="number" value="14" style="width:70px"> 天</div><div><button class="btn btn-sm btn-ghost" style="color:#EF4444">✕</button></div></div>
+          <div class="rx-item"><div><div class="nm">硫酸氢氯吡格雷片 <span class="tag teal">AI 推荐</span></div><div class="dose">75 mg · 口服 qd · 每日 1 次</div><div class="dose" style="margin-top:3px;color:#0F766E">💡 P2Y12 抑制剂，与阿司匹林联用构成双抗血小板</div></div><div><input type="number" value="14" style="width:70px"> 天</div><div><button class="btn btn-sm btn-ghost" style="color:#EF4444">✕</button></div></div>
+          <div class="rx-item"><div><div class="nm">阿托伐他汀钙片 <span class="tag amber">剂量调整</span></div><div class="dose">40 mg · 口服 qn · 每晚 1 次</div><div class="dose" style="margin-top:3px;color:#B45309">⚡ AI 调整：原 20mg → 40mg（LDL-C 4.2 偏高，强化降脂）</div></div><div><input type="number" value="30" style="width:70px"> 天</div><div><button class="btn btn-sm btn-ghost" style="color:#EF4444">✕</button></div></div>
+          <div class="rx-item"><div><div class="nm">硝酸异山梨酯片</div><div class="dose">5-10 mg · 舌下含化 prn · 必要时</div><div class="dose" style="margin-top:3px;color:#0F766E">💡 心绞痛发作时使用</div></div><div><input type="number" value="20" style="width:70px"> 片</div><div><button class="btn btn-sm btn-ghost" style="color:#EF4444">✕</button></div></div>
+          <div class="rx-item"><div><div class="nm">苯磺酸氨氯地平片 <span class="tag">长期用药</span></div><div class="dose">5 mg · 口服 qd · 每日 1 次</div><div class="dose" style="margin-top:3px;color:#64748B">维持治疗 · 患者长期使用</div></div><div><input type="number" value="30" style="width:70px"> 天</div><div><button class="btn btn-sm btn-ghost" style="color:#EF4444">✕</button></div></div>
+          <div style="border:1px dashed var(--border);border-radius:10px;padding:12px;text-align:center;margin-top:8px">
+            <button class="btn btn-sm">+ 添加药品</button>
+            <button class="btn btn-sm btn-primary" id="btnAISuggest" onclick="aiSuggest()">⚡ AI 推荐 (调用后端)</button>
+            <span id="aiSuggestStatus" style="font-size:12px;color:var(--muted);margin-left:6px"></span>
+          </div>
+          <div id="aiSuggestResult" style="display:none;margin-top:14px;padding:14px;background:#F0FDFA;border:1px solid #99F6E4;border-radius:10px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#0F766E">⚡ AI 生成的最新处方建议 (来自 POST /v1/prescriptions/suggest)</div>
+            <div id="aiSuggestList"></div>
+            <div id="aiSuggestWarnings" style="font-size:12px;color:#92400E;margin-top:8px"></div>
+            <div id="aiSuggestCitations" style="font-size:11px;color:#64748B;margin-top:6px"></div>
+          </div>
+          <hr>
+          <div class="alert blue" style="margin-bottom:10px">📋 <b>用药指导</b>（AI 生成，已根据患者文化水平优化）：<br>1. <b>双抗血小板</b>（阿司匹林 + 氯吡格雷）至少连用 12 个月，期间注意有无牙龈出血、黑便等出血表现；<br>2. <b>他汀</b>晚上服用效果更佳，可能引起肌肉酸痛，如严重请就诊；<br>3. <b>硝酸异山梨酯</b>仅胸痛发作时使用，连续 3 片仍不缓解请立即就医；<br>4. 服药期间避免大量饮用葡萄柚汁。</div>
+          <div style="display:flex;gap:8px"><button class="btn btn-primary" style="flex:1">📝 提交处方</button><button class="btn" style="flex:1">💾 保存草稿</button><button class="btn" style="flex:1">🖨 打印</button></div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 🛡️ AI 处方审核</h3>
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#0F766E">✅ 综合评分：96 / 100</div>
+          <div class="check-row ok">✅ <b>剂量合规</b>：所有药品剂量均在说明书允许范围内</div>
+          <div class="check-row ok">✅ <b>给药途径合规</b>：用法用量符合临床常规</div>
+          <div class="check-row ok">✅ <b>禁忌症排查</b>：患者无消化道出血史、肝肾功能正常</div>
+          <div class="check-row ok">✅ <b>过敏史排查</b>：未含青霉素类，符合患者过敏史</div>
+          <hr/>
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#92400E">⚠️ 需要您关注的 2 条建议</div>
+          <div class="check-row warn">⚠️ <b>药物相互作用</b>：阿司匹林 + 氯吡格雷 双抗血小板联用 → <b>出血风险升高</b>。建议监测血常规、便潜血，必要时联用 PPI（如奥美拉唑 20mg qd）保护胃黏膜。</div>
+          <div class="check-row warn">⚠️ <b>剂量提示</b>：阿托伐他汀从 20mg 调整为 40mg，注意肝功能监测（4 周后复查 ALT、AST、CK）。</div>
+          <hr/>
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px">📊 适用指南</div>
+          <div style="font-size:13px;color:#475569;line-height:1.7">✓ 2026 ESC 慢性冠脉综合征指南<br>✓ 2025 ACC/AHA UA/NSTEMI 管理指南<br>✓ 中国 ACS 诊疗共识 2024<br>✓ 中国成人血脂异常防治指南 2025</div>
+          <hr/>
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px">💰 费用预估</div>
+          <table>
+            <tr><td>处方总金额</td><td><b>¥ 287.50</b></td></tr>
+            <tr><td>医保报销</td><td>¥ 218.30 (76%)</td></tr>
+            <tr><td>患者自付</td><td><b style="color:#EF4444">¥ 69.20</b></td></tr>
+          </table>
+          <hr/>
+          <div class="alert green">✓ 处方质控通过，可提交药师审核。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+async function aiSuggest(){
+  const btn = document.getElementById('btnAISuggest');
+  const status = document.getElementById('aiSuggestStatus');
+  btn.disabled = true; btn.textContent = '⏳ AI 思考中…';
+  status.textContent = '';
+  try{
+    // 默认以当前页面展示的诊断调用
+    const body = {
+      diagnosis: ['I20.0 不稳定型心绞痛', 'I10 高血压', 'E78.5 高脂血症'],
+      allergy_history: ['青霉素'],
+      patient_age: 56,
+      patient_gender: 'female',
+    };
+    const data = await MedMind.Prescriptions.suggest(body);
+    const sugs = data.suggestions || [];
+    document.getElementById('aiSuggestResult').style.display = 'block';
+    document.getElementById('aiSuggestList').innerHTML = sugs.map(s => `
+      <div style="padding:8px 10px;border:1px solid #CCFBF1;background:#fff;border-radius:8px;margin-bottom:6px;font-size:13px">
+        <div style="font-weight:700">${s.drug_name} 
+          <span style="font-size:11px;padding:2px 6px;background:#0F766E;color:#fff;border-radius:4px;margin-left:6px">${s.evidence_level || ''}</span></div>
+        <div style="color:#475569;margin-top:2px">${s.dosage} · ${s.frequency} · ${s.route || ''} · ${s.duration || ''}</div>
+        <div style="color:#0F766E;font-size:12px;margin-top:4px">💡 ${s.reason || ''}</div>
+        ${ (s.contraindications||[]).length? `<div style="color:#B45309;font-size:11px;margin-top:3px">⚠ 禁忌: ${(s.contraindications||[]).join('、')}</div>`: '' }
+      </div>
+    `).join('');
+    document.getElementById('aiSuggestWarnings').innerHTML = (data.combined_warnings || []).map(w => `⚠ ${w}`).join('<br>');
+    document.getElementById('aiSuggestCitations').innerHTML = '参考: ' + ((data.citations || []).map(c => c.title || c).join(' · ') || '无');
+    status.textContent = `✓ 生成 ${sugs.length} 条推荐`;
+    status.style.color = '#0F766E';
+  } catch(e){
+    status.textContent = '调用失败: ' + (e && e.message || e);
+    status.style.color = '#EF4444';
+  } finally {
+    btn.disabled = false; btn.textContent = '⚡ AI 推荐 (调用后端)';
+  }
+}
+</script>
+</body>
+</html>

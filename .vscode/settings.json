@@ -1,0 +1,16 @@
+{
+  "python.defaultInterpreterPath": "D:\\anaconda3\\python.exe",
+  "python.terminal.activateEnvironment": false,
+  "python.analysis.extraPaths": [
+    "./medmind-backend"
+  ],
+  "files.associations": {
+    "*.html": "html"
+  },
+  "liveServer.settings.multiRootWorkspaceName": "MedMindNexus",
+  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.host": "localhost",
+  "liveServer.settings.port": 5500,
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda"
+}

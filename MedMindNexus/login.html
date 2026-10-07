@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登录 · MedMind Nexus</title>
+<link rel="stylesheet" href="assets/css/common.css">
+<style>
+  body{background:linear-gradient(135deg,#0EA5A4 0%,#2563EB 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;margin:0;padding:24px}
+  .login-card{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,.18)}
+  .login-card .head{text-align:center;margin-bottom:24px}
+  .login-card .logo{width:54px;height:54px;margin:0 auto 12px;border-radius:14px;background:linear-gradient(135deg,#0EA5A4,#2563EB);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px}
+  .login-card h2{margin:0 0 6px;font-size:22px;color:#0F172A}
+  .login-card .sub{font-size:13px;color:#64748B}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;color:#475569;margin-bottom:6px;font-weight:500}
+  .err{background:#FEF2F2;color:#991B1B;padding:10px;border-radius:8px;font-size:13px;margin-bottom:14px;border:1px solid #FECACA;display:none}
+  .demo-accounts{margin-top:18px;padding-top:18px;border-top:1px dashed #E2E8F0}
+  .demo-accounts .title{font-size:12px;color:#64748B;margin-bottom:8px}
+  .demo-row{display:flex;gap:6px;font-size:11px;flex-wrap:wrap}
+  .demo-row .acc{background:#F1F5F9;border:1px solid #E2E8F0;padding:5px 10px;border-radius:99px;cursor:pointer;color:#475569}
+  .demo-row .acc:hover{background:#E0F2F1;border-color:#0EA5A4;color:#0F766E}
+  .back{position:absolute;top:20px;left:20px;color:#fff;text-decoration:none;font-size:13px;opacity:.9}
+  .api-base{font-size:11px;color:#94A3B8;text-align:center;margin-top:14px;cursor:pointer}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← 返回官网</a>
+<div class="login-card">
+  <div class="head">
+    <div class="logo">M</div>
+    <h2>登录 MedMind Nexus</h2>
+    <p class="sub">医智中枢 · 全栈 AI 医疗平台</p>
+  </div>
+  <div id="err" class="err"></div>
+  <form id="loginForm">
+    <div class="field">
+      <label>用户名</label>
+      <input id="username" type="text" autocomplete="username" required placeholder="dr_zhang">
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input id="password" type="password" autocomplete="current-password" required placeholder="doctor123">
+    </div>
+    <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center" type="submit">
+      登录
+    </button>
+  </form>
+  <div class="demo-accounts">
+    <div class="title">🚀 演示账号（点击自动填充）</div>
+    <div class="demo-row">
+      <span class="acc" data-u="admin" data-p="admin123">👨‍💼 admin / admin123</span>
+      <span class="acc" data-u="dr_zhang" data-p="doctor123">👨‍⚕️ dr_zhang / doctor123</span>
+      <span class="acc" data-u="dr_li" data-p="doctor123">👩‍⚕️ dr_li / doctor123</span>
+      <span class="acc" data-u="prof_zhao" data-p="researcher123">👨‍🔬 prof_zhao / researcher123</span>
+      <span class="acc" data-u="patient_li" data-p="patient123">🧑 patient_li / patient123</span>
+    </div>
+  </div>
+  <div class="api-base" id="apiBaseLabel" title="点击修改后端地址">…</div>
+</div>
+
+<script src="assets/js/api.js"></script>
+<script>
+const errBox = document.getElementById('err');
+const form = document.getElementById('loginForm');
+const apiLabel = document.getElementById('apiBaseLabel');
+
+// 显示当前后端
+apiLabel.textContent = '后端: ' + MedMind.API_BASE;
+apiLabel.onclick = async () => {
+  const url = prompt('设置后端 API Base URL', MedMind.API_BASE);
+  if (url && url !== MedMind.API_BASE) MedMind.setApiBase(url);
+};
+
+// 演示账号一键填充
+document.querySelectorAll('.acc').forEach(el => {
+  el.onclick = () => {
+    document.getElementById('username').value = el.dataset.u;
+    document.getElementById('password').value = el.dataset.p;
+  };
+});
+
+form.onsubmit = async (e) => {
+  e.preventDefault();
+  errBox.style.display = 'none';
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value;
+  try {
+    const data = await MedMind.Auth.login(u, p);
+    MedMind.toast('登录成功,欢迎 ' + (data.user.full_name || data.user.username), 'success');
+    // 按角色跳转
+    const role = data.user.role;
+    const target = role === 'doctor' ? 'doctor/workbench.html'
+      : role === 'admin' ? 'admin/dashboard.html'
+      : role === 'researcher' ? 'research/literature.html'
+      : role === 'patient' ? 'patient/index.html'
+      : 'index.html';
+    setTimeout(() => location.href = target, 600);
+  } catch (err) {
+    errBox.textContent = '❌ ' + (err.message || '登录失败');
+    errBox.style.display = 'block';
+  }
+};
+
+// 已登录自动跳转
+if (MedMind.Auth.isLoggedIn()) {
+  const u = MedMind.Auth.getUser();
+  if (u && u.role) {
+    const target = u.role === 'doctor' ? 'doctor/workbench.html'
+      : u.role === 'admin' ? 'admin/dashboard.html'
+      : u.role === 'researcher' ? 'research/literature.html'
+      : u.role === 'patient' ? 'patient/index.html'
+      : 'index.html';
+    apiLabel.innerHTML = '已登录 (' + u.username + ') · <a href="' + target + '">进入工作台 →</a> · <a href="#" onclick="MedMind.Auth.logout().then(()=>location.reload())">登出</a>';
+  }
+}
+
+// 后端状态
+MedMind.ping().then(r => {
+  if (r.ok) apiLabel.style.color = '#10B981';
+  else apiLabel.style.color = '#EF4444';
+});
+</script>
+</body>
+</html>

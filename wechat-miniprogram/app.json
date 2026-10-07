@@ -1,0 +1,46 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/triage/triage",
+    "pages/depts/depts",
+    "pages/report/report",
+    "pages/meds/meds",
+    "pages/health/health"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0EA5A4",
+    "navigationBarTitleText": "MedMind Nexus 医智中枢",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F8FAFC"
+  },
+  "tabBar": {
+    "color": "#94A3B8",
+    "selectedColor": "#0EA5A4",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "首页", "iconPath": "assets/tab/home.png", "selectedIconPath": "assets/tab/home-on.png" },
+      { "pagePath": "pages/triage/triage", "text": "AI问诊", "iconPath": "assets/tab/ai.png", "selectedIconPath": "assets/tab/ai-on.png" },
+      { "pagePath": "pages/meds/meds", "text": "用药", "iconPath": "assets/tab/med.png", "selectedIconPath": "assets/tab/med-on.png" },
+      { "pagePath": "pages/health/health", "text": "我的", "iconPath": "assets/tab/me.png", "selectedIconPath": "assets/tab/me-on.png" }
+    ]
+  },
+  "networkTimeout": {
+    "request": 15000,
+    "uploadFile": 30000,
+    "downloadFile": 30000
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于附近医院推荐"
+    },
+    "scope.record": {
+      "desc": "用于AI预问诊语音输入"
+    }
+  },
+  "requiredBackgroundModes": ["audio"],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "medmind-doctor-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MedMind Nexus 医生端 PC 桌面端 (Tauri)",
+  "license": "Proprietary",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "build:win": "tauri build --target x86_64-pc-windows-msvc",
+    "build:mac": "tauri build --target universal-apple-darwin",
+    "build:linux": "tauri build --target x86_64-unknown-linux-gnu"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.1.0"
+  }
+}

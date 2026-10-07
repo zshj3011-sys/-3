@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文献检索 · MedMind 科研端</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="../assets/js/api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  .search-hero{background:linear-gradient(135deg,#0EA5A4,#2563EB);color:#fff;border-radius:18px;padding:32px 28px;margin-bottom:18px;position:relative;overflow:hidden}
+  .search-hero h2{margin:0 0 6px;font-size:22px;font-weight:800;color:#fff}
+  .search-hero p{margin:0 0 18px;opacity:.92;font-size:13px}
+  .search-box{background:#fff;border-radius:14px;padding:6px;display:flex;align-items:center;gap:6px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+  .search-box input{border:none;padding:12px 14px;font-size:15px}
+  .search-box input:focus{box-shadow:none}
+  .search-box select{border:none;width:auto;border-left:1px solid var(--border);padding:8px 12px}
+  .lit-result{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+  .lit-result .ttl{font-size:15px;font-weight:700;color:#1D4ED8;line-height:1.45;margin:0 0 6px}
+  .lit-result .ttl:hover{text-decoration:underline;cursor:pointer}
+  .lit-result .meta{font-size:12px;color:#64748B;margin-bottom:6px}
+  .lit-result .authors{font-size:13px;color:#475569;margin-bottom:8px}
+  .lit-result .abst{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+  .lit-result .ai-sum{background:#F0FDFA;border:1px solid #CCFBF1;border-radius:8px;padding:8px 10px;font-size:12px;color:#0F766E;line-height:1.55}
+  .lit-result .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .lit-result .if{font-weight:700;color:#B91C1C}
+  .lit-result .actions{display:flex;gap:6px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">科研端 · v1.0</div></div></div>
+    <a class="nav active" href="literature.html"><span>🔍</span>文献检索</a>
+    <a class="nav" href="statistics.html"><span>📊</span>统计分析</a>
+    <a class="nav" href="grant.html"><span>📝</span>标书生成</a>
+    <a class="nav" href="paper.html"><span>📚</span>论文写作</a>
+    <a class="nav"><span>📂</span>项目管理</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">科研端 / AI 文献检索</div><div class="demo-banner">📚 演示模式</div><div class="user"><div class="avatar">赵</div><div><div style="font-weight:600;font-size:13px">赵教授</div><div style="font-size:11px;color:var(--muted)">心内科 · 博导</div></div></div></div>
+    <div class="content">
+      <div class="search-hero">
+        <h2>🔍 AI 智能文献检索</h2>
+        <p>跨 PubMed / 知网 / 万方 / Cochrane / arXiv 5 大库一站式检索 · LLM 自动改写查询式 · 摘要自动生成</p>
+        <div class="search-box">
+          <input value="冠心病合并糖尿病患者的最新治疗进展，重点关注 SGLT2 抑制剂" placeholder="用自然语言提问，AI 会自动转换为专业检索式...">
+          <select><option>近 3 年</option><option>近 5 年</option><option>全部</option></select>
+          <select><option>全部数据源</option><option>仅 PubMed</option><option>仅中文</option></select>
+          <button class="btn btn-primary btn-lg">🔍 搜索</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;font-size:12px">
+          <span style="color:#fff;opacity:.8">热门：</span>
+          <span style="background:rgba(255,255,255,.18);padding:3px 10px;border-radius:99px;cursor:pointer">免疫治疗 + 肺癌</span>
+          <span style="background:rgba(255,255,255,.18);padding:3px 10px;border-radius:99px;cursor:pointer">GLP-1 + 心血管</span>
+          <span style="background:rgba(255,255,255,.18);padding:3px 10px;border-radius:99px;cursor:pointer">CAR-T + 实体瘤</span>
+          <span style="background:rgba(255,255,255,.18);padding:3px 10px;border-radius:99px;cursor:pointer">AI + 病理</span>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 280px">
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <h3><span class="dot"></span> 🧠 AI 检索式改写</h3>
+            <div style="font-size:13px;color:#64748B;margin-bottom:6px">您的提问 → 已自动转换为以下 3 个检索式（从宽到严）：</div>
+            <table>
+              <tr><td style="width:60%">("Coronary Artery Disease"[MeSH]) AND ("Diabetes Mellitus, Type 2"[MeSH]) AND ("SGLT2 Inhibitors"[Pharmacological Action])</td><td><b style="color:#0F766E">2,164</b> 篇</td></tr>
+              <tr><td>("CAD"[Title/Abstract]) AND ("T2DM"[Title/Abstract]) AND ("SGLT2i"[Title/Abstract]) AND ("2024"[Date - Publication] : "2026"[Date - Publication])</td><td><b style="color:#0F766E">386</b> 篇</td></tr>
+              <tr><td>((empagliflozin OR dapagliflozin OR canagliflozin) AND (CAD OR CHD) AND T2DM AND meta-analysis[Publication Type])</td><td><b style="color:#0F766E">42</b> 篇</td></tr>
+            </table>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:13px;color:#475569"><b>找到 386 篇</b>（已按相关度 + 影响因子排序）· 耗时 1.4s</div>
+            <div style="display:flex;gap:6px"><select style="width:auto"><option>按相关度</option><option>按时间</option><option>按引用</option><option>按 IF</option></select></div>
+          </div>
+          <div class="lit-result">
+            <p class="ttl">SGLT2 Inhibitors in Patients with Coronary Artery Disease and Type 2 Diabetes: A 2026 Meta-analysis of 18 RCTs</p>
+            <div class="meta"><span class="if">NEJM</span> · 2026 May · DOI: 10.1056/NEJMoa2602xxx · <span class="if">IF 96.2</span></div>
+            <div class="authors">Smith JA, Wang L, Chen M, et al.</div>
+            <div class="abst"><b>Background:</b> The role of SGLT2 inhibitors in CAD patients with T2DM remains controversial. <b>Methods:</b> We conducted a meta-analysis of 18 RCTs (n=68,432) ... <b>Results:</b> SGLT2i significantly reduced MACE (HR 0.78, 95% CI 0.71-0.86) and CV death (HR 0.83) ...</div>
+            <div class="ai-sum"><b>🤖 AI 摘要：</b>本研究是 2026 年最大规模的 SGLT2 抑制剂在冠心病合并糖尿病患者中的 Meta 分析。<b>核心发现</b>：SGLT2i 使 MACE 风险降低 22%，心血管死亡降低 17%，且与已有降糖、降压方案兼容。<b>临床意义</b>：建议作为该类患者的一线添加治疗。<b>局限性</b>：亚裔人群占比仅 18%。</div>
+            <div class="tags"><span class="tag teal">高相关 98%</span><span class="tag blue">Meta 分析</span><span class="tag green">RCT</span><span class="tag amber">引用 86 次</span></div>
+            <div class="actions"><button class="btn btn-sm btn-primary">📥 下载 PDF</button><button class="btn btn-sm">💾 加入文献库</button><button class="btn btn-sm">📝 引用</button><button class="btn btn-sm">🔗 相似研究</button></div>
+          </div>
+          <div class="lit-result">
+            <p class="ttl">Empagliflozin and Cardiovascular Outcomes in CAD Patients: A 5-Year Follow-up of the EMPA-CAD Trial</p>
+            <div class="meta"><span class="if">Lancet</span> · 2026 Mar · DOI: 10.1016/S0140-6736(26)xxxx · <span class="if">IF 168.9</span></div>
+            <div class="authors">Müller K, Tanaka H, Li X, et al.</div>
+            <div class="abst">5-year extension of the EMPA-CAD trial (n=4,238) confirmed sustained CV benefit with empagliflozin 10mg/day, with no increase in adverse events including DKA or fractures...</div>
+            <div class="ai-sum"><b>🤖 AI 摘要：</b>长期随访（5 年）证实恩格列净对 CAD 患者的心血管获益是持续的，没有出现长期使用相关的安全性问题。<b>对您的研究价值</b>：可作为标书中"研究基础"的核心引用，证明长期获益。</div>
+            <div class="tags"><span class="tag teal">高相关 96%</span><span class="tag blue">RCT 长期随访</span><span class="tag amber">引用 64 次</span></div>
+            <div class="actions"><button class="btn btn-sm btn-primary">📥 下载 PDF</button><button class="btn btn-sm">💾 加入</button><button class="btn btn-sm">📝 引用</button></div>
+          </div>
+          <div class="lit-result">
+            <p class="ttl">中国冠心病合并 2 型糖尿病患者 SGLT2 抑制剂使用现状的多中心横断面研究</p>
+            <div class="meta"><span class="if">中华心血管病杂志</span> · 2025 Dec · DOI: 10.3760/cma.j.cnxxxx · <span class="if">IF 中文核心</span></div>
+            <div class="authors">王伟, 李芳, 陈强 等</div>
+            <div class="abst">基于 32 家三甲医院 12,486 例患者的横断面研究，发现我国 SGLT2 抑制剂在 CAD+T2DM 患者中的使用率仅为 34.6%，远低于欧美 (68%)，主要障碍包括医保覆盖、医生认知和患者依从性...</div>
+            <div class="ai-sum"><b>🤖 AI 摘要：</b>揭示了中国 SGLT2i 使用差距，<b>对您的研究价值</b>：可用于您的国自然基金标书中"研究意义"和"创新点"的论证，说明国内现状不足。</div>
+            <div class="tags"><span class="tag teal">中国数据 ⭐</span><span class="tag blue">横断面</span><span class="tag green">大样本</span></div>
+            <div class="actions"><button class="btn btn-sm btn-primary">📥 下载</button><button class="btn btn-sm">💾 加入</button></div>
+          </div>
+          <div class="lit-result">
+            <p class="ttl">Dapagliflozin Reduces Heart Failure Hospitalization in Patients with Established CAD: The DAPA-MI Subgroup Analysis</p>
+            <div class="meta"><span class="if">JACC</span> · 2025 Nov · DOI: 10.1016/j.jacc.2025.xxxxx · <span class="if">IF 24.0</span></div>
+            <div class="authors">Brown R, Schmidt P, Park S, et al.</div>
+            <div class="abst">Subgroup analysis of DAPA-MI trial showed dapagliflozin reduced HF hospitalization by 31% in CAD patients post-MI, regardless of diabetes status...</div>
+            <div class="ai-sum"><b>🤖 AI 摘要：</b>提示 SGLT2 抑制剂的心衰预防效应可能<b>独立于糖尿病</b>，扩展了适应人群。</div>
+            <div class="tags"><span class="tag blue">亚组分析</span><span class="tag amber">引用 38 次</span></div>
+            <div class="actions"><button class="btn btn-sm btn-primary">📥 下载</button><button class="btn btn-sm">💾 加入</button></div>
+          </div>
+          <div class="lit-result">
+            <p class="ttl">Network Meta-analysis Comparing SGLT2 Inhibitors, GLP-1 RAs and DPP-4 Inhibitors in CAD+T2DM</p>
+            <div class="meta"><span class="if">European Heart Journal</span> · 2025 Sep · DOI: 10.1093/eurheartj/ehab xxx · <span class="if">IF 37.6</span></div>
+            <div class="authors">Kim DH, Roberts J, Liu Z, et al.</div>
+            <div class="abst">Network meta-analysis of 42 RCTs (n=146,238) directly comparing three drug classes. SGLT2i ranked highest for CV death and HF prevention, while GLP-1 RAs ranked highest for stroke prevention...</div>
+            <div class="ai-sum"><b>🤖 AI 摘要：</b>提供了三类降糖药对心血管结局的横向比较，<b>临床决策价值高</b>。</div>
+            <div class="tags"><span class="tag blue">Network Meta</span><span class="tag amber">引用 52 次</span></div>
+            <div class="actions"><button class="btn btn-sm btn-primary">📥 下载</button><button class="btn btn-sm">💾 加入</button></div>
+          </div>
+          <div style="text-align:center;margin-top:14px"><button class="btn btn-lg">加载更多（剩余 381 篇）</button></div>
+        </div>
+        <div>
+          <div class="card" style="position:sticky;top:80px">
+            <h3><span class="dot"></span> 📊 研究趋势分析</h3>
+            <canvas id="trendC" height="120"></canvas>
+            <hr/>
+            <div style="font-size:13px;color:#475569;line-height:1.7"><b>🔥 热点关键词</b><br/>SGLT2i (↑) · GLP-1 RA (↑) · Finerenone · Cardiomyopathy · AI ECG</div>
+            <hr/>
+            <div style="font-size:13px;line-height:1.7"><b>🌐 顶级研究团队</b><br/>· Mayo Clinic（38 篇）<br/>· Brigham (Harvard)（32 篇）<br/>· 阜外医院（28 篇）<br/>· DZHK (Germany)（22 篇）</div>
+            <hr/>
+            <div style="font-size:13px;line-height:1.7"><b>💡 AI 研究方向建议</b><br/>基于当前文献空白，建议研究方向：<br/><span class="tag teal" style="margin-top:6px">中国人群亚组</span> <span class="tag blue" style="margin-top:6px">SGLT2i + 老年</span> <span class="tag amber" style="margin-top:6px">基层医院依从性</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('trendC'),{type:'line',data:{labels:['2021','2022','2023','2024','2025','2026'],datasets:[{label:'SGLT2i + CAD',data:[42,86,158,264,398,386],borderColor:'#0EA5A4',tension:.35},{label:'GLP-1 + CAD',data:[24,48,96,162,224,196],borderColor:'#2563EB',tension:.35}]},options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}}}}});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof MedMind === 'undefined') return;
+  MedMind.mountStatusBadge();
+  // 为搜索按钮绑定后端 API
+  const searchBtn = document.querySelector('.search-box .btn-primary, .search-box button.btn-primary');
+  const searchInput = document.querySelector('.search-box input');
+  if (searchInput && searchBtn) {
+    searchBtn.onclick = async () => {
+      const q = searchInput.value.trim();
+      if (!q) return;
+      searchBtn.disabled = true;
+      const oldText = searchBtn.textContent;
+      searchBtn.textContent = '⏳ AI 检索中...';
+      try {
+        const data = await MedMind.Research.searchLiterature({ query: q, sources: ['pubmed','cnki'], page_size: 10 });
+        MedMind.toast('✓ AI 检索到 ' + data.total + ' 篇文献', 'success');
+        console.log('[Literature]', data);
+        // 渲染结果 (如需)
+      } catch (e) {
+        MedMind.toast('检索失败: ' + e.message, 'error');
+      } finally {
+        searchBtn.disabled = false;
+        searchBtn.textContent = oldText;
+      }
+    };
+  }
+});
+</script>
+</body>
+</html>

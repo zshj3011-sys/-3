@@ -1,0 +1,68 @@
+.depts-page { padding: 24rpx; }
+.search-row {
+  background: #fff;
+  border-radius: 100rpx;
+  padding: 8rpx 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(15,23,42,.05);
+}
+.search-input {
+  height: 72rpx;
+  font-size: 28rpx;
+  padding: 0 16rpx;
+}
+.ai-suggest {
+  background: linear-gradient(135deg, #F0FDFA 0%, #EFF6FF 100%);
+  border: 2rpx solid #CCFBF1;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+}
+.ai-head { font-size: 26rpx; font-weight: 700; color: #0F766E; margin-bottom: 8rpx; }
+.ai-text { font-size: 26rpx; color: #475569; }
+.kw { color: #0EA5A4; font-weight: 600; }
+.ai-result {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-top: 16rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dept-name { font-size: 30rpx; font-weight: 700; color: #0F172A; }
+.confidence { font-size: 22rpx; color: #10B981; }
+.section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #475569;
+  margin: 24rpx 0 16rpx;
+  padding: 0 4rpx;
+}
+.dept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+}
+.dept-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx 24rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 12rpx rgba(15,23,42,.05);
+}
+.dept-card .dept-icon {
+  font-size: 56rpx;
+  margin-bottom: 12rpx;
+}
+.dept-card .dept-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 4rpx;
+}
+.dept-card .dept-desc {
+  font-size: 22rpx;
+  color: #64748B;
+  line-height: 1.5;
+}

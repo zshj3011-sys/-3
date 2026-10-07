@@ -1,0 +1,24 @@
+<!-- 智能分诊 / 科室列表 -->
+<view class="depts-page">
+  <view class="search-row">
+    <input class="search-input" placeholder="描述症状, AI 帮您匹配科室" value="{{keyword}}" bindinput="onSearch"/>
+  </view>
+
+  <view wx:if="{{aiSuggestion}}" class="ai-suggest">
+    <view class="ai-head">🤖 AI 智能推荐</view>
+    <view class="ai-text">根据"<text class="kw">{{keyword}}</text>",最匹配:</view>
+    <view class="ai-result">
+      <text class="dept-name">{{aiSuggestion.name}}</text>
+      <text class="confidence">置信度 {{aiSuggestion.confidence}}%</text>
+    </view>
+  </view>
+
+  <view class="section-title"><text>全部科室</text></view>
+  <view class="dept-grid">
+    <view wx:for="{{depts}}" wx:key="id" class="dept-card" bindtap="goBook" data-id="{{item.id}}">
+      <view class="dept-icon">{{item.icon}}</view>
+      <view class="dept-name">{{item.name}}</view>
+      <view class="dept-desc">{{item.desc}}</view>
+    </view>
+  </view>
+</view>

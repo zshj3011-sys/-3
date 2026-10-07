@@ -1,0 +1,115 @@
+.health-page { padding-bottom: 100rpx; }
+
+.profile-hero {
+  background: linear-gradient(135deg, #0EA5A4, #2563EB);
+  color: #fff;
+  padding: 48rpx 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  border-radius: 0 0 32rpx 32rpx;
+}
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  font-weight: 700;
+}
+.profile-info { flex: 1; }
+.name { font-size: 36rpx; font-weight: 700; }
+.info-line { font-size: 24rpx; opacity: 0.9; margin-top: 4rpx; }
+.edit-btn {
+  background: rgba(255,255,255,0.2);
+  padding: 12rpx 24rpx;
+  border-radius: 100rpx;
+  font-size: 24rpx;
+}
+
+.stats {
+  display: flex;
+  background: #fff;
+  margin: -24rpx 24rpx 0;
+  border-radius: 20rpx;
+  padding: 28rpx 0;
+  box-shadow: 0 4rpx 16rpx rgba(15,23,42,.08);
+  position: relative;
+  z-index: 1;
+}
+.stat-cell {
+  flex: 1;
+  text-align: center;
+  border-right: 2rpx solid #E2E8F0;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-num { font-size: 36rpx; font-weight: 700; color: #0F172A; }
+.stat-label { font-size: 22rpx; color: #64748B; margin-top: 4rpx; }
+
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(15,23,42,.05);
+}
+.card-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 16rpx;
+}
+.empty-tip {
+  font-size: 24rpx;
+  color: #94A3B8;
+  text-align: center;
+  padding: 12rpx 0;
+}
+.tag-list { display: flex; gap: 12rpx; flex-wrap: wrap; }
+.tag {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  border-radius: 100rpx;
+  font-size: 24rpx;
+}
+.tag-red { background: #FEF2F2; color: #B91C1C; }
+.tag-yellow { background: #FEF3C7; color: #92400E; }
+
+.visit-row {
+  padding: 16rpx 0;
+  border-bottom: 2rpx solid #F1F5F9;
+}
+.visit-row:last-child { border-bottom: none; }
+.visit-date { font-size: 22rpx; color: #94A3B8; }
+.visit-info { font-size: 26rpx; color: #0F172A; margin: 4rpx 0; }
+.visit-dept { font-weight: 600; }
+.visit-doctor { color: #64748B; }
+.visit-diag { font-size: 24rpx; color: #475569; }
+
+.menu-list {
+  background: #fff;
+  margin: 24rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+.menu-row {
+  padding: 28rpx 24rpx;
+  border-bottom: 2rpx solid #F1F5F9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28rpx;
+  color: #0F172A;
+}
+.menu-row:last-child { border-bottom: none; }
+.arrow { color: #94A3B8; font-size: 32rpx; }
+
+.footer-info {
+  text-align: center;
+  font-size: 22rpx;
+  color: #94A3B8;
+  padding: 24rpx;
+}

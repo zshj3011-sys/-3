@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>论文写作辅助 · MedMind 科研端</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<style>
+  .two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+  .editor{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px}
+  .editor textarea{min-height:240px;font-size:14px;line-height:1.7;font-family:"PingFang SC",sans-serif}
+  .seg{padding:6px 0;border-bottom:1px dashed #E2E8F0;font-size:13px}
+  .seg:hover{background:#F8FAFC}
+  .seg .label{font-size:11px;color:#64748B;margin-bottom:2px}
+  .seg .ch{color:#475569}
+  .seg .en{color:#0F172A;font-style:italic;margin-top:3px}
+  .jour-card{display:flex;justify-content:space-between;align-items:flex-start;padding:11px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+  .jour-card .nm{font-weight:700;font-size:14px;color:#1D4ED8}
+  .jour-card .meta{font-size:11px;color:#64748B;margin-top:3px}
+  .jour-card .match{font-size:13px;font-weight:700;color:#0F766E;background:#F0FDFA;padding:3px 10px;border-radius:99px;border:1px solid #CCFBF1}
+</style>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/live-enhance.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">科研端 · v1.0</div></div></div>
+    <a class="nav" href="literature.html"><span>🔍</span>文献检索</a>
+    <a class="nav" href="statistics.html"><span>📊</span>统计分析</a>
+    <a class="nav" href="grant.html"><span>📝</span>标书生成</a>
+    <a class="nav active" href="paper.html"><span>📚</span>论文写作</a>
+    <a class="nav"><span>📂</span>项目管理</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">科研端 / 论文写作辅助</div><div class="demo-banner">📚 演示模式</div><div class="user"><div class="avatar">赵</div><div><div style="font-weight:600;font-size:13px">赵教授</div><div style="font-size:11px;color:var(--muted)">心内科 · 博导</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">📚 AI 论文写作辅助</h1>
+      <p class="page-sub">框架生成 · 中英润色 · 图表美化 · 选刊推荐 · 一站式服务</p>
+      <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px">
+        <div class="card" style="text-align:center;cursor:pointer"><div style="font-size:30px">🏗️</div><div style="font-weight:700;margin:6px 0">框架生成</div><div style="font-size:12px;color:#64748B">基于研究问题自动生成 IMRAD 结构</div></div>
+        <div class="card" style="text-align:center;cursor:pointer;border:2px solid var(--primary)"><div style="font-size:30px">✨</div><div style="font-weight:700;margin:6px 0">中英润色</div><div style="font-size:12px;color:#64748B">符合 SCI 语言规范</div></div>
+        <div class="card" style="text-align:center;cursor:pointer"><div style="font-size:30px">📊</div><div style="font-weight:700;margin:6px 0">图表美化</div><div style="font-size:12px;color:#64748B">出版级配色与版式</div></div>
+        <div class="card" style="text-align:center;cursor:pointer"><div style="font-size:30px">🎯</div><div style="font-weight:700;margin:6px 0">选刊推荐</div><div style="font-size:12px;color:#64748B">命中率预测</div></div>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="editor" style="margin-bottom:14px">
+            <h3 style="margin-top:0"><span class="dot"></span> 1️⃣ 输入您的原文（中文/英文均可）</h3>
+            <textarea id="src">本研究纳入了 268 例冠心病合并 2 型糖尿病的患者。研究分为 SGLT2 抑制剂组和对照组。我们发现 SGLT2 抑制剂组的 MACE 发生率明显比对照组要低。在多因素分析中也是这样。我们的研究结果说明，对于 CAD 合并 T2DM 的患者，使用 SGLT2 抑制剂是有效的，可以减少心血管事件的发生，对临床有指导意义。</textarea>
+            <div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-primary">✨ 中→英润色</button><button class="btn">📝 中文优化</button><button class="btn">📑 学术化</button><button class="btn">📥 上传文档</button></div>
+          </div>
+          <div class="editor">
+            <h3 style="margin-top:0"><span class="dot"></span> 2️⃣ AI 润色结果（已对照原文逐句）</h3>
+            <div class="seg">
+              <div class="label">第 1 句 · 增加 PRISMA 规范化表述</div>
+              <div class="ch">本研究纳入了 268 例冠心病合并 2 型糖尿病的患者。</div>
+              <div class="en">This prospective cohort study enrolled 268 consecutive patients with coronary artery disease (CAD) and concomitant type 2 diabetes mellitus (T2DM) from two tertiary referral centers between January 2024 and June 2025.</div>
+            </div>
+            <div class="seg">
+              <div class="label">第 2 句 · 补充分组规模</div>
+              <div class="ch">研究分为 SGLT2 抑制剂组和对照组。</div>
+              <div class="en">Participants were stratified into the SGLT2 inhibitor (SGLT2i) group (n = 132) and the standard-care control group (n = 136) based on physician's discretion at baseline.</div>
+            </div>
+            <div class="seg">
+              <div class="label">第 3 句 · 量化"明显"为统计学语言</div>
+              <div class="ch">SGLT2 抑制剂组的 MACE 发生率明显比对照组要低。</div>
+              <div class="en">During a median follow-up of 24 months, the cumulative incidence of major adverse cardiovascular events (MACE) was significantly lower in the SGLT2i group compared with the control group (12.3% vs 23.8%; log-rank P &lt; 0.001).</div>
+            </div>
+            <div class="seg">
+              <div class="label">第 4 句 · 强化多变量结果</div>
+              <div class="ch">在多因素分析中也是这样。</div>
+              <div class="en">After multivariable adjustment for age, sex, baseline LDL-C, HbA1c, and smoking status, SGLT2i remained independently associated with a reduced MACE risk (adjusted hazard ratio 0.52; 95% CI 0.34-0.79; P &lt; 0.001).</div>
+            </div>
+            <div class="seg">
+              <div class="label">第 5 句 · 提升结论深度</div>
+              <div class="ch">使用 SGLT2 抑制剂是有效的，可以减少心血管事件的发生，对临床有指导意义。</div>
+              <div class="en">These findings suggest that SGLT2 inhibitors confer substantial cardiovascular benefit beyond glycemic control in patients with both CAD and T2DM, supporting their early adoption in clinical practice as a potential cornerstone therapy for this high-risk population.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary">📋 复制全部</button><button class="btn">✏️ 再次润色</button><button class="btn">🌐 切换风格 (NEJM / Lancet)</button></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <h3><span class="dot"></span> 📊 润色质量评估</h3>
+            <table style="font-size:13px">
+              <tr><td>科学性</td><td><b style="color:#0F766E">A</b></td><td><div class="progress"><span style="width:95%;background:#10B981"></span></div></td></tr>
+              <tr><td>语言规范</td><td><b style="color:#0F766E">A</b></td><td><div class="progress"><span style="width:93%;background:#10B981"></span></div></td></tr>
+              <tr><td>逻辑清晰</td><td><b style="color:#0F766E">A</b></td><td><div class="progress"><span style="width:96%;background:#10B981"></span></div></td></tr>
+              <tr><td>数据精确</td><td><b style="color:#0F766E">A</b></td><td><div class="progress"><span style="width:98%;background:#10B981"></span></div></td></tr>
+              <tr><td>结构完整</td><td><b style="color:#B45309">B+</b></td><td><div class="progress"><span style="width:82%;background:#F59E0B"></span></div></td></tr>
+            </table>
+            <div class="alert blue" style="margin-top:10px;font-size:12px">💡 建议补充 IMRAD 中的 Limitations 段落，以及对临床实施的具体建议。</div>
+          </div>
+          <div class="card" style="margin-bottom:14px">
+            <h3><span class="dot"></span> 🎯 AI 选刊推荐</h3>
+            <div style="font-size:12px;color:#64748B;margin-bottom:10px">基于您的研究内容、样本量、设计类型，AI 推荐以下期刊：</div>
+            <div class="jour-card"><div><div class="nm">European Heart Journal</div><div class="meta">IF 37.6 · 心血管 Q1 · 心血管疗效相关 · 录用率 ~12%</div></div><div class="match">87%</div></div>
+            <div class="jour-card"><div><div class="nm">JACC: Cardiovascular Interventions</div><div class="meta">IF 11.7 · 心血管 Q1 · 偏好真实世界研究 · 录用率 ~22%</div></div><div class="match">82%</div></div>
+            <div class="jour-card"><div><div class="nm">Cardiovascular Diabetology</div><div class="meta">IF 9.3 · 跨学科 · 高度匹配主题 · 录用率 ~28%</div></div><div class="match">94%</div></div>
+            <div class="jour-card"><div><div class="nm">Diabetes Care</div><div class="meta">IF 16.2 · 内分泌 Q1 · 录用率 ~18%</div></div><div class="match">76%</div></div>
+            <div class="alert green" style="font-size:12px">⭐ <b>强烈推荐</b>：Cardiovascular Diabetology — 主题极度匹配，录用率较高，发表周期约 8-12 周</div>
+          </div>
+          <div class="card">
+            <h3><span class="dot"></span> 🛠️ 其他写作工具</h3>
+            <div style="display:grid;gap:8px">
+              <button class="btn">📊 摘要生成（中英双语）</button>
+              <button class="btn">📝 标题优化（10 个备选）</button>
+              <button class="btn">🔑 关键词推荐</button>
+              <button class="btn">📚 参考文献格式转换</button>
+              <button class="btn">🎨 Figure 1 美化（PRISMA 流程图）</button>
+              <button class="btn">📨 Cover Letter 撰写</button>
+              <button class="btn">🔁 Response to Reviewers</button>
+              <button class="btn">🔍 学术不端查重</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

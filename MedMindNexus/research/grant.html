@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国自然标书 AI 生成 · MedMind 科研端</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<style>
+  .step-bar{display:flex;gap:14px;margin-bottom:18px;padding:12px;background:#fff;border-radius:12px;border:1px solid var(--border)}
+  .step{display:flex;align-items:center;gap:8px;font-size:13px;color:#94A3B8;flex:1}
+  .step .n{width:24px;height:24px;border-radius:50%;background:#E2E8F0;color:#64748B;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .step.done{color:#0F766E}.step.done .n{background:#0EA5A4;color:#fff}
+  .step.active{color:#0F172A;font-weight:700}.step.active .n{background:linear-gradient(135deg,#0EA5A4,#2563EB);color:#fff}
+  .step-arrow{color:#CBD5E1}
+  .sect{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+  .sect h4{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .sect h4 .n{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#0EA5A4,#2563EB);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .sect h4 .score{margin-left:auto;font-size:12px;color:#0F766E;background:#F0FDFA;border:1px solid #CCFBF1;padding:2px 8px;border-radius:99px;font-weight:600}
+  .sect .body{font-size:13px;line-height:1.85;color:#334155;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px}
+  .sect .actions{display:flex;gap:8px;margin-top:10px}
+  .sect .ai-mark{color:#0F766E;background:#F0FDFA;padding:1px 6px;border-radius:4px;font-size:12px;border:1px solid #CCFBF1}
+</style>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/live-enhance.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">科研端 · v1.0</div></div></div>
+    <a class="nav" href="literature.html"><span>🔍</span>文献检索</a>
+    <a class="nav" href="statistics.html"><span>📊</span>统计分析</a>
+    <a class="nav active" href="grant.html"><span>📝</span>标书生成</a>
+    <a class="nav" href="paper.html"><span>📚</span>论文写作</a>
+    <a class="nav"><span>📂</span>项目管理</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">科研端 / 国自然标书 AI 生成</div><div class="demo-banner">📝 演示模式</div><div class="user"><div class="avatar">赵</div><div><div style="font-weight:600;font-size:13px">赵教授</div><div style="font-size:11px;color:var(--muted)">心内科 · 博导</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">📝 国自然基金标书 AI 辅助撰写</h1>
+      <p class="page-sub">输入研究主题与方向，AI 自动生成立项依据、研究内容、技术路线、研究基础等所有标书章节</p>
+      <div class="step-bar">
+        <div class="step done"><div class="n">✓</div>选择类型</div><div class="step-arrow">›</div>
+        <div class="step done"><div class="n">✓</div>研究主题</div><div class="step-arrow">›</div>
+        <div class="step done"><div class="n">✓</div>文献调研</div><div class="step-arrow">›</div>
+        <div class="step active"><div class="n">4</div>AI 生成与精修</div><div class="step-arrow">›</div>
+        <div class="step"><div class="n">5</div>导出与查重</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <h3><span class="dot"></span> 📋 项目基本信息</h3>
+        <table style="font-size:13px">
+          <tr><td style="width:25%;color:#64748B">项目名称</td><td><b>SGLT2 抑制剂改善冠心病合并 2 型糖尿病患者心血管结局的机制研究——基于代谢组学与肠道菌群的多组学分析</b></td></tr>
+          <tr><td style="color:#64748B">基金类型</td><td>国家自然科学基金 · 面上项目</td></tr>
+          <tr><td style="color:#64748B">学科代码</td><td>H0203 - 心血管系统疾病</td></tr>
+          <tr><td style="color:#64748B">关键词</td><td>SGLT2 抑制剂 / 冠心病 / 2 型糖尿病 / 代谢组学 / 肠道菌群 / MACE</td></tr>
+          <tr><td style="color:#64748B">申请金额</td><td>¥ 580,000</td></tr>
+          <tr><td style="color:#64748B">研究期限</td><td>2027.01 - 2030.12（48 个月）</td></tr>
+        </table>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 280px">
+        <div>
+          <div class="sect">
+            <h4><span class="n">1</span> 立项依据（研究意义） <span class="score">AI 评分 92</span></h4>
+            <div class="body">
+              <b>研究背景</b><br>
+              冠心病（CAD）合并 2 型糖尿病（T2DM）是当前全球心血管医学领域最严峻的临床问题之一。我国 35 岁以上人群 T2DM 患病率达 12.4%，其中约 35% 合并 CAD<sup>[1]</sup>。该类患者主要心血管不良事件（MACE）发生率是单纯 CAD 患者的 2.3 倍<sup>[2]</sup>。<br><br>
+              <b>研究现状与不足</b><br>
+              近 5 年，SGLT2 抑制剂在心血管获益方面取得突破性进展。<span class="ai-mark">📚 引文 [3-7]</span> EMPA-REG、DAPA-HF、SOLOIST 等多项 RCT 证实其可显著降低 MACE 风险（约 20-30%）。然而，<b>其确切的心血管保护机制仍不明确</b>，目前提出的"渗透性利尿"、"血流动力学"、"抗炎"等假说均不能完全解释其多重获益。<br><br>
+              更重要的是，<b>现有研究主要基于欧美人群，中国人群的疗效及机制研究严重缺乏</b><sup>[8]</sup>。本课题组前期对 32 家三甲医院 12,486 例患者的横断面研究显示，我国 SGLT2i 在 CAD+T2DM 患者中的使用率仅 34.6%，远低于欧美（68%）。<br><br>
+              <b>科学问题</b><br>
+              我们提出核心科学问题：<b>SGLT2i 是否通过调节"肠-肾-心"轴上的代谢通路与肠道菌群结构，发挥独立于降糖之外的心血管保护作用？</b><br><br>
+              <b>研究意义</b><br>
+              本研究的预期成果将（1）阐明 SGLT2i 心血管获益的关键代谢途径，<span class="ai-mark">🎯 创新点 1</span>（2）发现中国 CAD+T2DM 人群特异性的疗效预测生物标志物，<span class="ai-mark">🎯 创新点 2</span>（3）为个体化精准用药提供理论依据。<span class="ai-mark">🎯 创新点 3</span>
+            </div>
+            <div class="actions"><button class="btn btn-sm btn-primary">⚡ AI 重生成</button><button class="btn btn-sm">✏️ 编辑</button><button class="btn btn-sm">📚 补充文献</button></div>
+          </div>
+          <div class="sect">
+            <h4><span class="n">2</span> 研究内容与目标 <span class="score">AI 评分 95</span></h4>
+            <div class="body">
+              <b>2.1 研究目标</b><br>
+              通过前瞻性队列研究结合多组学分析，揭示 SGLT2i 在 CAD+T2DM 患者中的心血管保护机制，发现疗效预测的生物标志物，建立个体化用药决策模型。<br><br>
+              <b>2.2 研究内容</b><br>
+              <b>研究内容 1</b>：SGLT2i 治疗对 CAD+T2DM 患者心血管结局的影响（临床队列）<br>
+              · 纳入 600 例（SGLT2i 组 300 + 对照组 300），随访 36 个月<br>
+              · 主要终点：MACE（CV 死亡、非致死性 MI、非致死性卒中）<br><br>
+              <b>研究内容 2</b>：代谢组学揭示 SGLT2i 的代谢调控机制<br>
+              · 在治疗前、3 月、12 月、24 月采集血样，进行 LC-MS/MS 非靶向代谢组学<br>
+              · 重点关注短链脂肪酸、胆汁酸、TMAO 等心血管相关代谢物<br><br>
+              <b>研究内容 3</b>：肠道菌群结构变化与心血管获益的关联<br>
+              · 16S rDNA + 宏基因组测序<br>
+              · 关键属：Akkermansia muciniphila、Faecalibacterium、Bacteroides<br><br>
+              <b>研究内容 4</b>：基于多组学的疗效预测模型构建<br>
+              · 机器学习（XGBoost / 随机森林）整合临床+代谢+菌群数据<br>
+              · 外部验证：3 家协作单位独立队列
+            </div>
+            <div class="actions"><button class="btn btn-sm btn-primary">⚡ AI 重生成</button><button class="btn btn-sm">✏️ 编辑</button></div>
+          </div>
+          <div class="sect">
+            <h4><span class="n">3</span> 技术路线 <span class="score">AI 评分 90</span></h4>
+            <div class="body">
+              <div style="background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:18px;font-family:ui-monospace,monospace;font-size:12px;color:#334155;line-height:1.9;white-space:pre">┌────────────────────────────────────────────────┐
+│  Phase 1: 临床队列建立 (2027.01 - 2027.12)      │
+│  纳入 600 例 CAD+T2DM 患者 → 1:1 分组            │
+│            ↓                                   │
+├────────────────────────────────────────────────┤
+│  Phase 2: 多组学样本采集 (2027.06 - 2030.06)   │
+│  ┌────────────┬─────────────┬─────────────┐  │
+│  │ 代谢组学   │ 肠道菌群    │ 临床数据    │  │
+│  │ (LC-MS/MS) │ (16S+宏基因)│ (随访 36月) │  │
+│  └────────────┴─────────────┴─────────────┘  │
+│            ↓                                   │
+├────────────────────────────────────────────────┤
+│  Phase 3: 数据分析与建模 (2029.01 - 2030.06)   │
+│  · 差异代谢物筛选 · 菌群-代谢关联              │
+│  · ML 模型构建 · 外部验证                       │
+│            ↓                                   │
+├────────────────────────────────────────────────┤
+│  Phase 4: 临床转化 (2030.07 - 2030.12)         │
+│  · 疗效预测算法 · 临床决策支持系统              │
+└────────────────────────────────────────────────┘</div>
+            </div>
+            <div class="actions"><button class="btn btn-sm btn-primary">⚡ AI 优化图示</button><button class="btn btn-sm">🎨 美化版</button></div>
+          </div>
+          <div class="sect">
+            <h4><span class="n">4</span> 研究基础与工作条件 <span class="score">AI 评分 88</span></h4>
+            <div class="body">
+              <b>4.1 申请人前期工作</b><br>
+              · 主持国自然青年基金 1 项（已结题，结题评估优）<br>
+              · 主持省部级项目 2 项<br>
+              · 近 5 年第一/通讯作者 SCI 论文 18 篇，包括 Circulation 1 篇、JACC 2 篇、EHJ 1 篇<br>
+              · 已建立 CAD+T2DM 患者临床数据库（n=2,832）<br>
+              · 主持完成 32 家三甲医院多中心横断面研究<br><br>
+              <b>4.2 实验条件</b><br>
+              · 单位 P3 生物安全实验室<br>
+              · LC-MS/MS Q Exactive HF-X<br>
+              · Illumina NovaSeq 6000 测序平台<br>
+              · 高性能计算集群（GPU 8×A100）<br><br>
+              <b>4.3 协作单位</b><br>
+              · 北京阜外医院（外部验证队列 1：n=200）<br>
+              · 上海中山医院（外部验证队列 2：n=200）<br>
+              · 广州中山一院（外部验证队列 3：n=200）
+            </div>
+            <div class="actions"><button class="btn btn-sm btn-primary">⚡ AI 完善</button><button class="btn btn-sm">📋 导入个人成果</button></div>
+          </div>
+          <div class="sect">
+            <h4><span class="n">5</span> 经费预算 <span class="score">AI 评分 96</span></h4>
+            <div class="body">
+              <table>
+                <tr><th>科目</th><th>金额（万元）</th><th>占比</th><th>说明</th></tr>
+                <tr><td>1. 设备费</td><td>10.0</td><td>17.2%</td><td>新增分析软件、储存设备</td></tr>
+                <tr><td>2. 材料费</td><td>18.0</td><td>31.0%</td><td>试剂、采血管、测序耗材</td></tr>
+                <tr><td>3. 测试化验加工费</td><td>15.0</td><td>25.9%</td><td>代谢组学+菌群测序 600 例</td></tr>
+                <tr><td>4. 差旅与会议费</td><td>5.0</td><td>8.6%</td><td>多中心协调、国际会议</td></tr>
+                <tr><td>5. 出版/文献/信息</td><td>3.0</td><td>5.2%</td><td>SCI 版面费、文献</td></tr>
+                <tr><td>6. 劳务费</td><td>5.0</td><td>8.6%</td><td>研究生劳务、统计咨询</td></tr>
+                <tr><td>7. 间接费</td><td>2.0</td><td>3.5%</td><td>按 4% 核算</td></tr>
+                <tr style="font-weight:700;background:#F0FDFA"><td>合计</td><td>58.0</td><td>100%</td><td>—</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="card" style="margin-top:14px">
+            <h3><span class="dot"></span> 🔍 AI 综合评审 + 一键质量评估</h3>
+            <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+              <div style="text-align:center;padding:12px;background:#F8FAFC;border-radius:10px"><div style="font-size:11px;color:#64748B">总体评分</div><div style="font-size:30px;font-weight:800;color:#0F766E;margin:4px 0">91</div><div style="font-size:11px;color:#64748B">优秀 · 有较强中标潜力</div></div>
+              <div style="text-align:center;padding:12px;background:#F8FAFC;border-radius:10px"><div style="font-size:11px;color:#64748B">创新性</div><div style="font-size:30px;font-weight:800;color:#0F766E">A</div><div style="font-size:11px;color:#64748B">3 个明确创新点</div></div>
+              <div style="text-align:center;padding:12px;background:#F8FAFC;border-radius:10px"><div style="font-size:11px;color:#64748B">可行性</div><div style="font-size:30px;font-weight:800;color:#0F766E">A</div><div style="font-size:11px;color:#64748B">前期工作扎实</div></div>
+            </div>
+            <div class="alert green" style="margin-bottom:6px"><b>✓ 优势</b>：研究问题前沿、创新点明确、前期数据充分、技术路线合理、经费配置合理</div>
+            <div class="alert amber" style="margin-bottom:6px"><b>⚠ 待改进</b>：可加强"潜在风险与应对策略"段落；建议补充 1 项国际合作单位</div>
+            <div class="alert blue"><b>💡 AI 建议</b>：参考评审专家关注角度，建议在"立项依据"末尾增加"研究的临床转化价值"段落</div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="position:sticky;top:80px">
+            <h3><span class="dot"></span> 📋 标书章节</h3>
+            <ul style="list-style:none;padding:0;margin:0;font-size:13px">
+              <li style="padding:7px 0;border-bottom:1px dashed #E2E8F0;color:#0F766E">✓ 1. 立项依据</li>
+              <li style="padding:7px 0;border-bottom:1px dashed #E2E8F0;color:#0F766E">✓ 2. 研究内容</li>
+              <li style="padding:7px 0;border-bottom:1px dashed #E2E8F0;color:#0F766E">✓ 3. 技术路线</li>
+              <li style="padding:7px 0;border-bottom:1px dashed #E2E8F0;color:#0F766E">✓ 4. 研究基础</li>
+              <li style="padding:7px 0;border-bottom:1px dashed #E2E8F0;color:#0F766E">✓ 5. 经费预算</li>
+              <li style="padding:7px 0;border-bottom:1px dashed #E2E8F0;color:#64748B">○ 6. 团队简介</li>
+              <li style="padding:7px 0;color:#64748B">○ 7. 个人简历</li>
+            </ul>
+            <hr/>
+            <button class="btn btn-primary" style="width:100%;margin-bottom:8px">📥 导出 Word</button>
+            <button class="btn" style="width:100%;margin-bottom:8px">📋 复制全文</button>
+            <button class="btn" style="width:100%">🔍 查重检测</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

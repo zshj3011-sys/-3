@@ -1,0 +1,69 @@
+.meds-page { padding-bottom: 100rpx; }
+.hero {
+  background: linear-gradient(135deg, #0EA5A4, #2563EB);
+  color: #fff;
+  padding: 48rpx 32rpx;
+  border-radius: 0 0 32rpx 32rpx;
+}
+.hero-title { font-size: 36rpx; font-weight: 700; }
+.hero-sub { font-size: 26rpx; opacity: 0.9; margin-top: 8rpx; }
+
+.meds-list { padding: 24rpx; margin-top: -24rpx; }
+.med-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15,23,42,.06);
+}
+.med-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+.med-name { font-size: 30rpx; font-weight: 700; color: #0F172A; }
+.med-tag {
+  padding: 6rpx 16rpx;
+  border-radius: 100rpx;
+  font-size: 22rpx;
+}
+.med-tag.tag-yellow { background: #FEF3C7; color: #92400E; }
+.med-tag.tag-green { background: #D1FAE5; color: #065F46; }
+
+.med-info {
+  font-size: 24rpx;
+  color: #64748B;
+  margin-bottom: 12rpx;
+}
+.med-info .dot { margin: 0 8rpx; }
+
+.med-bottom {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+}
+.alarm { color: #0EA5A4; font-weight: 600; }
+.remain { color: #94A3B8; }
+
+.confirm-btn {
+  margin-top: 16rpx;
+  background: linear-gradient(135deg, #10B981, #0EA5A4);
+  color: #fff;
+  text-align: center;
+  padding: 16rpx;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.add-med {
+  margin: 24rpx;
+  text-align: center;
+  padding: 28rpx;
+  background: #fff;
+  border: 2rpx dashed #CBD5E1;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  color: #64748B;
+}

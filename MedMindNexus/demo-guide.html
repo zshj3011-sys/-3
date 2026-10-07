@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品演示导览 · MedMind Nexus</title>
+<link rel="stylesheet" href="assets/css/common.css">
+<style>
+  body{background:linear-gradient(135deg,#F0FDFA 0%,#EFF6FF 50%,#FAF5FF 100%);min-height:100vh}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px}
+  .head{text-align:center;margin-bottom:40px}
+  .head h1{font-size:34px;margin:0 0 10px;background:linear-gradient(135deg,#0EA5A4,#2563EB,#7C3AED);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+  .head .sub{color:#475569;font-size:15px;max-width:560px;margin:0 auto}
+  .badges{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .b{font-size:12px;padding:5px 12px;border-radius:99px;background:#fff;border:1px solid #E2E8F0;color:#475569}
+  .b.green{background:#DCFCE7;color:#15803D;border-color:#86EFAC}
+
+  .step{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:24px 26px;margin-bottom:18px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 4px 20px rgba(15,23,42,.04);transition:.2s}
+  .step:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(15,23,42,.08);border-color:#CCFBF1}
+  .step .num{width:56px;height:56px;border-radius:16px;color:#fff;font-weight:800;font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:ui-monospace,monospace}
+  .step.s1 .num{background:linear-gradient(135deg,#10B981,#0EA5A4)}
+  .step.s2 .num{background:linear-gradient(135deg,#7C3AED,#2563EB)}
+  .step.s3 .num{background:linear-gradient(135deg,#F59E0B,#EF4444)}
+  .step.s4 .num{background:linear-gradient(135deg,#0EA5A4,#2563EB)}
+  .step.s5 .num{background:linear-gradient(135deg,#EC4899,#7C3AED)}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:0 0 8px;font-size:19px;display:flex;align-items:center;gap:10px}
+  .step .meta{font-size:12px;color:#0F766E;background:#F0FDFA;padding:3px 10px;border-radius:99px;border:1px solid #CCFBF1;font-weight:600}
+  .step p{color:#475569;font-size:14px;line-height:1.7;margin:0 0 12px}
+  .step .tips{background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 14px;font-size:13px;color:#92400E;margin-bottom:12px;display:flex;gap:8px}
+  .step .links{display:flex;gap:8px;flex-wrap:wrap}
+  .step .links a{text-decoration:none}
+
+  .footer-tip{text-align:center;margin-top:32px;color:#64748B;font-size:13px}
+
+  .quick-bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);padding:12px 0;margin:-24px -24px 32px;text-align:center;border-bottom:1px solid #E2E8F0;z-index:10}
+  .quick-bar a{margin:0 6px;font-size:13px;color:#475569;padding:6px 12px;border-radius:8px;border:1px solid #E2E8F0;background:#fff}
+  .quick-bar a:hover{border-color:var(--primary);color:var(--primary)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="quick-bar">
+    <a href="index.html">🏠 官网</a>
+    <a href="sitemap.html">🗺️ 总览</a>
+    <a href="patient/index.html">📱 患者端</a>
+    <a href="doctor/workbench.html">💻 医生端</a>
+    <a href="admin/dashboard.html">📊 管理端</a>
+    <a href="research/literature.html">🔬 科研端</a>
+  </div>
+
+  <div class="head">
+    <h1>🎬 MedMind Nexus 产品演示导览</h1>
+    <p class="sub">按下面 5 个步骤体验整个产品，约 8-10 分钟可看完全部核心功能</p>
+    <div class="badges">
+      <span class="b green">✓ 16 个页面 · 4 端联动</span>
+      <span class="b">📊 11 个 Chart.js 交互图表</span>
+      <span class="b">🎙️ 实时语音转写动画</span>
+      <span class="b">🤖 可交互 AI 对话</span>
+    </div>
+  </div>
+
+  <div class="step s1">
+    <div class="num">1</div>
+    <div class="body">
+      <h3>从官网开始 <span class="meta">约 2 分钟</span></h3>
+      <p>先打开<b>产品官网首页</b>，整体了解 MedMind Nexus 的产品定位、核心差异化、四端架构和定价模式。这是您向客户/投资人/合作方介绍产品的第一站。</p>
+      <div class="tips">💡 看点：Hero 区有 4 张悬浮的功能预览卡片，下方有 3 大核心差异化、6 项产品特性、12 项技术栈展示</div>
+      <div class="links">
+        <a class="btn btn-primary" href="index.html">→ 打开官网首页</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="step s2">
+    <div class="num">2</div>
+    <div class="body">
+      <h3>体验患者端 AI 预问诊 <span class="meta">约 2 分钟</span></h3>
+      <p>进入<b>患者端微信小程序模拟器</b>，点击"AI 预问诊"。<b>这是一个真正可以聊起来的 AI 对话</b>——回答 5 个问题后会自动生成 SOAP 格式的预问诊摘要。还可以体验报告解读、用药提醒、健康档案。</p>
+      <div class="tips">💡 看点：点击底部"问诊"，选"胸口疼，三天了"开始对话；继续回答 4-5 个问题后会自动生成结构化摘要</div>
+      <div class="links">
+        <a class="btn btn-primary" href="patient/index.html">→ 进入患者小程序</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="step s3">
+    <div class="num">3</div>
+    <div class="body">
+      <h3>看医生端 AI 诊间助手 <span class="meta">⭐ 约 3 分钟 · 核心</span></h3>
+      <p>这是<b>整个产品最有价值的功能</b>。打开<b>医生端 → AI 诊间助手</b>，您会看到一段医患对话被实时语音转写出来（自动动画演示），右侧 AI 实时给出诊断建议、推荐检查、用药建议。然后点中间"⚡ AI 生成草稿"，AI 自动填出完整的 SOAP 病历。</p>
+      <div class="tips">💡 看点：左栏 = 患者档案 + AI 预问诊摘要；中栏 = 实时语音转写 + 病历草稿；右栏 = AI 诊断辅助 + 用药建议 + 指南依据</div>
+      <div class="links">
+        <a class="btn btn-primary" href="doctor/consultation.html">⭐ 进入 AI 诊间助手</a>
+        <a class="btn" href="doctor/workbench.html">医生工作台</a>
+        <a class="btn" href="doctor/diagnosis.html">AI 诊断辅助</a>
+        <a class="btn" href="doctor/prescription.html">AI 开方</a>
+        <a class="btn" href="doctor/quality.html">病历质控</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="step s4">
+    <div class="num">4</div>
+    <div class="body">
+      <h3>看管理端数据驾驶舱 <span class="meta">约 2 分钟</span></h3>
+      <p>切换到<b>院长视角</b>——打开管理端运营驾驶舱，看医院实时运营数据、各科室效率、AI 使用情况。然后进入<b>DRG 控费</b>，这是医院管理者最关心的模块，AI 提前预测哪些病案会超支，并给出优化建议。</p>
+      <div class="tips">💡 看点：深色专业的"驾驶舱"风格 · 4 张交互图表 · DRG 控费有 6 例真实样例的超支预警 · ROI 趋势图</div>
+      <div class="links">
+        <a class="btn btn-primary" href="admin/dashboard.html">→ 运营驾驶舱</a>
+        <a class="btn" href="admin/drg.html">⭐ DRG 控费</a>
+        <a class="btn" href="admin/quality.html">医疗质控</a>
+        <a class="btn" href="admin/ai-analytics.html">AI 价值分析</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="step s5">
+    <div class="num">5</div>
+    <div class="body">
+      <h3>体验科研端 AI 写标书 <span class="meta">约 2 分钟</span></h3>
+      <p>给科研型医生看的杀手锏功能。打开<b>科研端 → 标书生成</b>，看 AI 如何把一个研究主题变成完整的国自然标书 5 大章节。还可以体验文献检索、统计分析（含 R 代码 + Kaplan-Meier 曲线）、论文中英润色。</p>
+      <div class="tips">💡 看点：完整的国自然标书 5 大章节 + AI 综合评审（91 分） · 5 篇 SCI 级文献样例 · 中英对照逐句润色</div>
+      <div class="links">
+        <a class="btn btn-primary" href="research/grant.html">→ AI 写标书</a>
+        <a class="btn" href="research/literature.html">文献检索</a>
+        <a class="btn" href="research/statistics.html">统计分析</a>
+        <a class="btn" href="research/paper.html">论文润色</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-tip">
+    🎉 演示完毕 · 共 16 个页面 · 4 端联动 · 内含 11 个 Chart.js 图表与多个交互动画<br>
+    返回 <a href="index.html">官网首页</a> · <a href="sitemap.html">查看全产品总览</a> · <a href="README.md">使用说明</a> · <a href="任务清单.md">任务清单</a>
+  </div>
+
+</div>
+</body>
+</html>

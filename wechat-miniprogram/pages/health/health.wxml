@@ -1,0 +1,71 @@
+<!-- 个人健康档案 -->
+<view class="health-page">
+  <view class="profile-hero">
+    <view class="avatar">{{archive.name && archive.name.slice(0,1) || '李'}}</view>
+    <view class="profile-info">
+      <view class="name">{{archive.name}}</view>
+      <view class="info-line">{{archive.sex}} · {{archive.age}}岁 · 血型 {{archive.blood_type}}</view>
+    </view>
+    <view class="edit-btn" bindtap="editProfile">编辑</view>
+  </view>
+
+  <view class="stats">
+    <view class="stat-cell">
+      <view class="stat-num">{{archive.reports}}</view>
+      <view class="stat-label">体检报告</view>
+    </view>
+    <view class="stat-cell">
+      <view class="stat-num">{{archive.prescriptions}}</view>
+      <view class="stat-label">用药记录</view>
+    </view>
+    <view class="stat-cell">
+      <view class="stat-num">{{archive.recent_visits.length}}</view>
+      <view class="stat-label">就诊记录</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">⚠️ 过敏史</view>
+    <view wx:if="{{archive.allergies.length === 0}}" class="empty-tip">暂无</view>
+    <view class="tag-list">
+      <text wx:for="{{archive.allergies}}" wx:key="*this" class="tag tag-red">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">💚 慢病管理</view>
+    <view wx:if="{{archive.chronic.length === 0}}" class="empty-tip">暂无慢病记录</view>
+    <view class="tag-list">
+      <text wx:for="{{archive.chronic}}" wx:key="*this" class="tag tag-yellow">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">📅 就诊记录</view>
+    <view wx:for="{{archive.recent_visits}}" wx:key="date" class="visit-row">
+      <view class="visit-date">{{item.date}}</view>
+      <view class="visit-info">
+        <text class="visit-dept">{{item.dept}}</text>
+        <text class="visit-doctor">· {{item.doctor}}</text>
+      </view>
+      <view class="visit-diag">{{item.diagnosis}}</view>
+    </view>
+  </view>
+
+  <view class="menu-list">
+    <view class="menu-row" bindtap="goSettings">
+      <text>🔐 隐私与安全</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="menu-row" bindtap="goAuth">
+      <text>👨‍⚕️ 我的医生</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="menu-row" bindtap="goAbout">
+      <text>ℹ️ 关于 MedMind Nexus</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view class="footer-info">MedMind Nexus · v1.0.0 · 等保三级</view>
+</view>

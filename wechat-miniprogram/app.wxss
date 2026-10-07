@@ -1,0 +1,131 @@
+/* app.wxss · MedMind Nexus 全局样式 */
+page {
+  background: #F8FAFC;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: #0F172A;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+/* 主题色变量(WXSS不支持变量,用 class 代替) */
+.theme-primary { color: #0EA5A4; }
+.theme-primary-bg { background: #0EA5A4; }
+.theme-blue { color: #2563EB; }
+.theme-danger { color: #EF4444; }
+.theme-warning { color: #F59E0B; }
+.theme-success { color: #10B981; }
+
+/* 通用 card */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin: 24rpx;
+  box-shadow: 0 4rpx 24rpx rgba(15, 23, 42, 0.06);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.card-subtitle {
+  font-size: 24rpx;
+  color: #64748B;
+}
+
+/* 按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #0EA5A4, #2563EB);
+  color: #fff;
+  border-radius: 100rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-ghost {
+  background: #fff;
+  color: #0EA5A4;
+  border: 2rpx solid #0EA5A4;
+  border-radius: 100rpx;
+  padding: 22rpx 46rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  border-radius: 100rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.tag-teal { background: #F0FDFA; color: #0F766E; border: 2rpx solid #CCFBF1; }
+.tag-blue { background: #EFF6FF; color: #1E40AF; border: 2rpx solid #DBEAFE; }
+.tag-red { background: #FEF2F2; color: #B91C1C; border: 2rpx solid #FEE2E2; }
+.tag-yellow { background: #FFFBEB; color: #B45309; border: 2rpx solid #FEF3C7; }
+
+/* 分割线 */
+.divider {
+  height: 2rpx;
+  background: #E2E8F0;
+  margin: 24rpx 0;
+}
+
+/* 空态 */
+.empty {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  color: #94A3B8;
+  font-size: 26rpx;
+}
+
+/* 章节标题 */
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #0F172A;
+  padding: 16rpx 32rpx 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title .more {
+  font-size: 24rpx;
+  color: #64748B;
+  font-weight: 400;
+}
+
+/* 离线提示条 */
+.offline-bar {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 24rpx;
+  text-align: center;
+  padding: 12rpx;
+}
+
+/* 头部渐变 */
+.hero-gradient {
+  background: linear-gradient(135deg, #0EA5A4 0%, #2563EB 100%);
+  color: #fff;
+  padding: 48rpx 32rpx 64rpx;
+  border-radius: 0 0 32rpx 32rpx;
+}

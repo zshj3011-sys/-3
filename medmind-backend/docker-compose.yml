@@ -1,0 +1,71 @@
+# MedMind Nexus 一键部署
+# 用法:
+#   开发模式 (SQLite):  docker compose up
+#   生产模式 (PostgreSQL): docker compose --profile prod up -d
+
+version: "3.9"
+
+services:
+  # ============ 后端 API ============
+  api:
+    build: .
+    container_name: medmind-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=development
+      - DATABASE_URL=sqlite+aiosqlite:///./data/medmind.db
+      - SECRET_KEY=${SECRET_KEY:-please-change-in-production-secret-key}
+      - LLM_PROVIDER=${LLM_PROVIDER:-mock}
+      - LLM_API_KEY=${LLM_API_KEY:-}
+      - LLM_API_BASE=${LLM_API_BASE:-https://api.deepseek.com/v1}
+      - LLM_MODEL=${LLM_MODEL:-deepseek-chat}
+      - CORS_ORIGINS=*
+      - DEMO_MODE=true
+      - FRONTEND_DIR=/app/static_frontend
+    volumes:
+      - ./data:/app/data
+      - ./static_frontend:/app/static_frontend:ro
+
+  # ============ PostgreSQL (生产) ============
+  db:
+    image: postgres:16-alpine
+    container_name: medmind-db
+    restart: unless-stopped
+    profiles: ["prod"]
+    environment:
+      - POSTGRES_DB=medmind
+      - POSTGRES_USER=medmind
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-medmind_secure_pw}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # ============ Redis (可选缓存/限流) ============
+  redis:
+    image: redis:7-alpine
+    container_name: medmind-redis
+    restart: unless-stopped
+    profiles: ["prod"]
+    ports:
+      - "6379:6379"
+
+  # ============ 前端静态 (可选, 已含于 api 服务) ============
+  # nginx 反代仅在需要独立部署前端时使用
+  nginx:
+    image: nginx:alpine
+    container_name: medmind-nginx
+    restart: unless-stopped
+    profiles: ["nginx"]
+    ports:
+      - "80:80"
+    volumes:
+      - ./static_frontend:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

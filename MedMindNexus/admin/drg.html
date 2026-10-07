@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRG/DIP 控费 · MedMind Nexus 管理端</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="../assets/js/api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body{background:#0F172A;color:#E2E8F0}
+  .topbar{background:#1E293B;border-bottom:1px solid #334155}.topbar .crumb{color:#94A3B8}.topbar .user{color:#E2E8F0}
+  .content{background:#0B1326}.page-title{color:#fff}.page-sub{color:#94A3B8}
+  .card{background:#1E293B;border:1px solid #334155;color:#E2E8F0}.card h3{color:#fff}.card h3 .dot{background:#22D3EE}
+  .stat{background:#1E293B;border:1px solid #334155}.stat .label{color:#94A3B8}.stat .value{color:#fff}
+  table{color:#CBD5E1}th{background:#0F172A;color:#94A3B8;border-bottom:1px solid #334155}td{border-bottom:1px solid #334155}tr:hover td{background:#162038}
+  .tag{background:#334155;color:#CBD5E1}.tag.green{background:rgba(16,185,129,.2);color:#34D399}.tag.red{background:rgba(239,68,68,.2);color:#F87171}.tag.amber{background:rgba(245,158,11,.2);color:#FBBF24}
+  .alert.amber{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#FCD34D}.alert.red{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#FCA5A5}.alert.blue{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.3);color:#93C5FD}.alert.green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:#86EFAC}
+  .gain{color:#34D399;font-weight:700}.loss{color:#F87171;font-weight:700}
+  input,select{background:#0F172A;border:1px solid #334155;color:#E2E8F0}input:focus,select:focus{border-color:#22D3EE}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">管理端 · 驾驶舱</div></div></div>
+    <div class="group">运营管理</div>
+    <a class="nav" href="dashboard.html"><span>📊</span>运营驾驶舱</a>
+    <a class="nav active" href="drg.html"><span>💰</span>DRG/DIP 控费</a>
+    <a class="nav" href="quality.html"><span>✅</span>医疗质控</a>
+    <a class="nav" href="ai-analytics.html"><span>🤖</span>AI 使用分析</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">管理端 / DRG/DIP 医保控费</div><div class="demo-banner">📊 演示数据</div><div class="user"><div class="avatar">李</div><div><div style="font-weight:600;font-size:13px;color:#fff">李院长</div><div style="font-size:11px;color:#94A3B8">第一人民医院</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">💰 DRG/DIP 医保控费系统</h1>
+      <p class="page-sub">基于 XGBoost + GPT-4 双模型预测，提前发现亏损病案并智能优化方案</p>
+      <div class="grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:18px">
+        <div class="stat"><div class="label">本月病案总数</div><div class="value">2,486</div><div class="delta">↑ 124 vs 上月</div></div>
+        <div class="stat"><div class="label">DRG 入组率</div><div class="value">98.2%</div><div class="delta up">↑ 高于国标</div></div>
+        <div class="stat"><div class="label">本月医保结算</div><div class="value">¥38.6M</div><div class="delta">已收 ¥35.2M</div></div>
+        <div class="stat"><div class="label">DRG 盈余</div><div class="value" style="color:#34D399">+¥520K</div><div class="delta up">↑ 同比 12%</div></div>
+        <div class="stat"><div class="label">超支预警</div><div class="value" style="color:#FCA5A5">42</div><div class="delta">已处理 28 例</div></div>
+      </div>
+      <div class="grid" style="grid-template-columns:1.4fr 1fr">
+        <div class="card"><h3><span class="dot"></span> 📊 各 DRG 组盈亏分析（本月 TOP 10）</h3><canvas id="drgGroups" height="180"></canvas></div>
+        <div class="card"><h3><span class="dot"></span> 🥧 各科室 DRG 盈亏占比</h3><canvas id="deptPie" height="180"></canvas></div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3><span class="dot"></span> 🚨 DRG 超支预警病案<span style="margin-left:auto;font-size:12px;color:#94A3B8">AI 实时预测 · 仅显示尚未结算的在院病例</span></h3>
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <input style="flex:1" placeholder="🔍 搜索病案号 / 患者">
+          <select><option>全部科室</option><option>心内科</option><option>骨科</option><option>外科</option></select>
+          <select><option>预警等级</option><option>严重超支</option><option>预警</option><option>临界</option></select>
+          <button class="btn btn-primary">⚡ AI 优化建议</button>
+        </div>
+        <table>
+          <tr><th>病案号</th><th>患者</th><th>主诊断 / 操作</th><th>DRG 组</th><th>定额(¥)</th><th>已发生(¥)</th><th>AI预测总额(¥)</th><th>差额</th><th>预警</th><th>AI建议</th></tr>
+          <tr><td>IP-2026-026432</td><td>赵某 ♂ 58</td><td>急性心梗 + PCI</td><td>FB19</td><td>45,000</td><td>32,200</td><td><b>48,200</b></td><td class="loss">-3,200</td><td><span class="tag amber">预警</span></td><td><button class="btn btn-sm">查看</button></td></tr>
+          <tr><td>IP-2026-026398</td><td>钱某 ♂ 67</td><td>股骨颈骨折 + 髋关节置换</td><td>IB39</td><td>62,000</td><td>58,400</td><td><b>72,500</b></td><td class="loss">-10,500</td><td><span class="tag red">严重超支</span></td><td><button class="btn btn-sm">查看</button></td></tr>
+          <tr><td>IP-2026-026312</td><td>孙某 ♀ 73</td><td>急性心肌梗死</td><td>FB29</td><td>38,000</td><td>35,600</td><td><b>40,800</b></td><td class="loss">-2,800</td><td><span class="tag amber">预警</span></td><td><button class="btn btn-sm">查看</button></td></tr>
+          <tr><td>IP-2026-026287</td><td>周某 ♂ 49</td><td>慢性肾衰透析</td><td>LF19</td><td>28,000</td><td>22,400</td><td><b>32,500</b></td><td class="loss">-4,500</td><td><span class="tag red">严重超支</span></td><td><button class="btn btn-sm">查看</button></td></tr>
+          <tr><td>IP-2026-026245</td><td>吴某 ♀ 35</td><td>剖宫产</td><td>OB29</td><td>11,000</td><td>8,600</td><td><b>12,300</b></td><td class="loss">-1,300</td><td><span class="tag amber">预警</span></td><td><button class="btn btn-sm">查看</button></td></tr>
+          <tr><td>IP-2026-026198</td><td>郑某 ♂ 65</td><td>脑梗死</td><td>BR21</td><td>24,000</td><td>26,800</td><td><b>32,200</b></td><td class="loss">-8,200</td><td><span class="tag red">严重超支</span></td><td><button class="btn btn-sm">查看</button></td></tr>
+        </table>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">
+        <div class="card">
+          <h3><span class="dot"></span> 🤖 AI 控费建议（针对周某病例）</h3>
+          <div class="alert blue" style="margin-bottom:10px"><b>病案 IP-2026-026287</b> · 慢性肾衰 LF19 组 · 定额 ¥28,000<br/>AI 预测最终费用 <b>¥32,500</b>，超支 <b>¥4,500</b></div>
+          <table>
+            <tr><th>优化建议</th><th>预计节省</th><th>风险评估</th></tr>
+            <tr><td>1. 调整透析方案（HD → HDF）</td><td><b style="color:#34D399">¥1,800</b></td><td><span class="tag green">无</span></td></tr>
+            <tr><td>2. 改用医保乙类药品替代部分丙类</td><td><b style="color:#34D399">¥980</b></td><td><span class="tag green">无</span></td></tr>
+            <tr><td>3. 缩短住院日（参考 RW 标杆 6.2 天）</td><td><b style="color:#34D399">¥1,200</b></td><td><span class="tag amber">需医师评估</span></td></tr>
+            <tr><td>4. 优化辅助检查频次</td><td><b style="color:#34D399">¥800</b></td><td><span class="tag green">无</span></td></tr>
+          </table>
+          <div class="alert green" style="margin-top:10px">✓ 综合优化预计可节省 ¥4,780，使该病案由<b>超支转盈余</b>。</div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 📈 DRG 控费 ROI 趋势</h3>
+          <canvas id="roiChart" height="160"></canvas>
+          <div class="alert green" style="margin-top:10px;font-size:12px">✨ 自启用 AI DRG 控费系统以来，半年累计减少医保亏损 <b>¥3.2 M</b>，<b>ROI 18.4x</b></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3><span class="dot"></span> 📋 各科室 DRG 关键指标</h3>
+        <table>
+          <tr><th>科室</th><th>病案数</th><th>CMI 指数</th><th>时间消耗指数</th><th>费用消耗指数</th><th>盈亏</th><th>趋势</th></tr>
+          <tr><td>心内科</td><td>284</td><td>1.18</td><td>0.94 ✓</td><td>0.97 ✓</td><td><span class="gain">+¥86K</span></td><td>↗</td></tr>
+          <tr><td>骨科</td><td>196</td><td>1.42</td><td>0.98 ✓</td><td>1.08 ⚠</td><td><span class="loss">-¥12K</span></td><td>↘</td></tr>
+          <tr><td>普外</td><td>178</td><td>1.05</td><td>0.92 ✓</td><td>0.95 ✓</td><td><span class="gain">+¥64K</span></td><td>↗</td></tr>
+          <tr><td>神经外</td><td>54</td><td>1.86</td><td>1.05 ⚠</td><td>1.12 ⚠</td><td><span class="loss">-¥38K</span></td><td>↘</td></tr>
+          <tr><td>妇产</td><td>312</td><td>0.78</td><td>0.91 ✓</td><td>0.93 ✓</td><td><span class="gain">+¥124K</span></td><td>→</td></tr>
+          <tr><td>儿科</td><td>248</td><td>0.62</td><td>0.94 ✓</td><td>0.96 ✓</td><td><span class="gain">+¥58K</span></td><td>↗</td></tr>
+          <tr><td>消化</td><td>196</td><td>0.96</td><td>0.93 ✓</td><td>0.99 ✓</td><td><span class="gain">+¥42K</span></td><td>→</td></tr>
+          <tr><td>呼吸</td><td>178</td><td>1.02</td><td>0.97 ✓</td><td>1.02 ⚠</td><td><span class="loss">-¥18K</span></td><td>→</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+Chart.defaults.color = '#94A3B8';
+new Chart(document.getElementById('drgGroups'),{type:'bar',data:{labels:['OB29 剖宫产','BR21 脑梗','FB29 心梗','HZ15 胆囊切除','IB39 髋关节置换','FB19 心梗+PCI','LF19 肾衰透析','GB29 胃部手术','EB39 肺炎','KS19 糖尿病'],datasets:[{label:'盈余',data:[124,82,68,56,0,42,0,38,46,28],backgroundColor:'#34D399',stack:'a'},{label:'亏损',data:[0,0,0,0,-46,0,-38,0,0,0],backgroundColor:'#F87171',stack:'a'}]},options:{plugins:{legend:{position:'top'}},scales:{y:{title:{display:true,text:'盈亏（千元）'}}}}});
+new Chart(document.getElementById('deptPie'),{type:'doughnut',data:{labels:['妇产','心内','儿科','普外','消化','其他'],datasets:[{data:[124,86,58,64,42,86],backgroundColor:['#22D3EE','#A78BFA','#FB923C','#34D399','#FBBF24','#94A3B8'],borderColor:'#1E293B',borderWidth:2}]}});
+new Chart(document.getElementById('roiChart'),{type:'line',data:{labels:['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],datasets:[{label:'月度亏损（千元）',data:[820,610,520,480,420,380,340],borderColor:'#F87171',backgroundColor:'rgba(248,113,113,.12)',tension:.4,fill:true},{label:'AI 拦截节省（千元）',data:[180,320,480,560,620,680,740],borderColor:'#34D399',backgroundColor:'rgba(52,211,153,.12)',tension:.4,fill:true}]},options:{plugins:{legend:{position:'top'}}}});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (typeof MedMind === 'undefined') return;
+  MedMind.mountStatusBadge();
+  // 演示: 调用后端 DRG 预测一例,补充页面顶部提示条
+  try {
+    const dash = await MedMind.DRG.dashboard();
+    const tip = document.createElement('div');
+    tip.className = 'demo-banner';
+    tip.style.cssText = 'display:inline-block;margin:6px 0 12px;background:#1E293B;color:#5EEAD4;border:1px solid #0F766E';
+    tip.innerHTML = '✅ 后端实时: 总病案 ' + dash.total_cases + ' 例 · 总盈亏 ¥' + Math.round(dash.total_profit_loss/1000) + 'K · 超支预警 ' + dash.warned_count + ' 条';
+    const c = document.querySelector('.content');
+    if (c) c.insertBefore(tip, c.firstChild.nextSibling);
+  } catch (e) { console.warn(e.message); }
+
+  // v3.4 新增: 调用 /drg/cost-alert 接口, 在顶部插入实时预警摆件
+  try {
+    const alert = await MedMind.DRG.costAlert({ page: 1, page_size: 5 });
+    if (alert && alert.summary) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.cssText = 'margin:10px 0;padding:14px;background:linear-gradient(135deg,#FEF2F2,#FFFBEB);border:1px solid #FDE68A;border-radius:12px';
+      const s = alert.summary;
+      const top = (alert.alerts || []).slice(0, 3).map(a => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #FDE68A;font-size:13px"><span><b>${a.case_number}</b> · ${a.drg_name || a.primary_diagnosis || ''}</span><span style="color:${a.alert_level==='red'?'#DC2626':a.alert_level==='amber'?'#D97706':'#16A34A'};font-weight:700">¥${a.actual_cost.toLocaleString()} / ¥${a.payment_standard.toLocaleString()} (${(a.cost_ratio*100).toFixed(0)}%)</span></div>`).join('');
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0;color:#92400E">🔔 DRG 实时费用预警 <span style="font-size:12px;color:#64748B;font-weight:400">(后端 API /drg/cost-alert)</span></h3>
+          <div style="font-size:13px"><span style="color:#DC2626">红 ${s.red_count}</span> · <span style="color:#D97706">黄 ${s.amber_count}</span> · <span style="color:#16A34A">绿 ${s.green_count}</span></div>
+        </div>
+        ${top}
+        <div style="font-size:11px;color:#92400E;margin-top:8px">· 默认展示 Top 3 · 完整列表可调用 GET /v1/drg/cost-alert</div>
+      `;
+      const c2 = document.querySelector('.content');
+      if (c2) c2.insertBefore(card, c2.firstChild.nextSibling.nextSibling);
+    }
+  } catch (e) { console.warn('cost-alert', e.message); }
+});
+// 点击表格某行 -> 发起 AI 优化补充补充
+async function aiOptimize(diag, icd, age, cost) {
+  try {
+    const r = await MedMind.DRG.predict({ primary_diagnosis: diag, icd10: icd, age, actual_cost: cost });
+    MedMind.toast('AI 预测: DRG ' + r.drg_code + ' · 支付 ¥' + r.payment_standard + ' · 盈亏 ¥' + r.profit_loss + ' · ' + (r.suggestions||[]).slice(0,1).join(''), 'success');
+  } catch (e) { MedMind.toast('后端异常: ' + e.message, 'error'); }
+}
+</script>
+</body>
+</html>

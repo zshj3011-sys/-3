@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全产品总览 · MedMind Nexus</title>
+<link rel="stylesheet" href="assets/css/common.css">
+<script src="assets/js/api.js"></script>
+<style>
+  body{background:linear-gradient(135deg,#F0FDFA 0%,#EFF6FF 50%,#FAF5FF 100%);min-height:100vh}
+  .wrap{max-width:1280px;margin:0 auto;padding:42px 24px 64px}
+  .head{text-align:center;margin-bottom:36px}
+  .head h1{font-size:32px;margin:0 0 8px;background:linear-gradient(135deg,#0EA5A4,#2563EB,#7C3AED);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+  .head .sub{color:#475569;font-size:15px;max-width:680px;margin:0 auto}
+  .stats-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .stats-row .b{font-size:12px;padding:5px 12px;border-radius:99px;background:#fff;border:1px solid #E2E8F0;color:#475569}
+  .stats-row .b strong{color:#0F766E;font-weight:700;margin-right:4px}
+
+  .section{margin-bottom:28px}
+  .section-h{font-size:18px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:10px;margin:0 0 14px}
+  .section-h .ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+  .section.s1 .ic{background:linear-gradient(135deg,#10B981,#0EA5A4)}
+  .section.s2 .ic{background:linear-gradient(135deg,#7C3AED,#2563EB)}
+  .section.s3 .ic{background:linear-gradient(135deg,#F59E0B,#EF4444)}
+  .section.s4 .ic{background:linear-gradient(135deg,#0EA5A4,#2563EB)}
+  .section.s5 .ic{background:linear-gradient(135deg,#EC4899,#7C3AED)}
+  .section-h .count{margin-left:auto;font-size:12px;color:#64748B;font-weight:500}
+
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .pcard{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:16px;text-decoration:none;color:inherit;transition:.2s;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+  .pcard:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(15,23,42,.08);border-color:#CCFBF1;color:inherit}
+  .pcard .star{position:absolute;top:10px;right:12px;font-size:11px;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;padding:2px 8px;border-radius:99px;font-weight:700}
+  .pcard .thumb{height:84px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;position:relative;overflow:hidden}
+  .pcard .thumb .mini{position:absolute;left:8px;bottom:6px;font-size:10px;background:rgba(0,0,0,.18);padding:2px 7px;border-radius:99px;color:#fff;font-weight:600;letter-spacing:.04em}
+  .pcard .tt{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+  .pcard .desc{font-size:12px;color:#64748B;line-height:1.6;flex:1}
+  .pcard .meta{display:flex;gap:6px;font-size:11px;color:#475569;flex-wrap:wrap}
+  .pcard .meta span{background:#F1F5F9;padding:2px 8px;border-radius:99px}
+  .pcard .meta .green{background:#DCFCE7;color:#15803D}
+  .pcard .meta .teal{background:#CCFBF1;color:#0F766E}
+  .pcard .meta .purple{background:#F3E8FF;color:#6B21A8}
+  .pcard .meta .blue{background:#DBEAFE;color:#1D4ED8}
+
+  /* per-end thumb backgrounds */
+  .th-web{background:linear-gradient(135deg,#0EA5A4,#2563EB)}
+  .th-p{background:linear-gradient(135deg,#0EA5A4,#10B981)}
+  .th-d{background:linear-gradient(135deg,#7C3AED,#2563EB)}
+  .th-a{background:linear-gradient(180deg,#0F172A,#1E293B);border:1px solid #334155}
+  .th-r{background:linear-gradient(135deg,#F59E0B,#EF4444)}
+  .th-doc{background:linear-gradient(135deg,#64748B,#0F172A)}
+
+  .quick-bar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);padding:10px;margin:-24px -24px 28px;text-align:center;border-bottom:1px solid #E2E8F0;z-index:10;border-radius:0 0 14px 14px}
+  .quick-bar a{margin:0 6px;font-size:13px;color:#475569;padding:6px 12px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;text-decoration:none;display:inline-block}
+  .quick-bar a:hover{border-color:var(--primary);color:var(--primary)}
+  .quick-bar a.active{background:var(--primary);border-color:var(--primary);color:#fff}
+
+  @media (max-width:680px){.head h1{font-size:24px}.pgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="quick-bar">
+    <a class="active" href="sitemap.html">🗺️ 总览</a>
+    <a href="index.html">🏠 官网</a>
+    <a href="login.html">🔑 登录</a>
+    <a href="demo-guide.html">🎬 演示导览</a>
+    <a href="patient/index.html">📱 患者端</a>
+    <a href="doctor/workbench.html">💻 医生端</a>
+    <a href="admin/dashboard.html">📊 管理端</a>
+    <a href="research/literature.html">🔬 科研端</a>
+  </div>
+
+  <div class="head">
+    <h1>🗺️ MedMind Nexus · 全产品总览</h1>
+    <p class="sub">面向中小医疗机构的 AI 原生智能体平台 · 四端联动 · 18 个页面 · 一图掌握全部交付</p>
+    <div class="stats-row">
+      <span class="b"><strong>18</strong>个页面</span>
+      <span class="b"><strong>4</strong>端联动</span>
+      <span class="b"><strong>7</strong>个 AI Agent</span>
+      <span class="b"><strong>40+</strong>个 API 路由</span>
+      <span class="b"><strong>18/18</strong>测试通过</span>
+      <span class="b"><strong>0</strong>断链 · <strong>0</strong>占位符</span>
+    </div>
+  </div>
+
+  <!-- 系统架构图 -->
+  <div class="section s5" style="margin-bottom:32px">
+    <h2 class="section-h"><div class="ic">🏗️</div> 系统架构一图看懂 <span class="count">v1.0 · 全栈四层</span></h2>
+    <a href="assets/architecture.png" target="_blank" style="display:block;background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:14px;text-align:center;text-decoration:none;color:inherit;transition:.2s" onmouseover="this.style.boxShadow='0 12px 30px rgba(15,23,42,.08)'" onmouseout="this.style.boxShadow='none'">
+      <img src="assets/architecture.png" alt="MedMind Nexus 系统架构" style="max-width:100%;height:auto;border-radius:10px;display:block;margin:0 auto"/>
+      <div style="font-size:13px;color:#64748B;margin-top:10px">点击查看大图 · 涵盖 4 层架构 / 7 大 AI Agent / 12 张表 / 部署矩阵</div>
+    </a>
+  </div>
+
+  <!-- 官网 + 导览 -->
+  <div class="section s4">
+    <h2 class="section-h"><div class="ic">🌐</div> 产品官网 & 演示导览 <span class="count">2 个页面</span></h2>
+    <div class="pgrid">
+      <a class="pcard" href="index.html">
+        <div class="thumb th-web">🏠<div class="mini">官网</div></div>
+        <div class="tt">官网首页 <span class="tag teal">入口</span></div>
+        <div class="desc">Hero 区动态卡片 + 3 大差异化 + 12 技术栈 + 3 档定价 + 联系表单</div>
+        <div class="meta"><span class="green">推荐第 1 站</span><span>21 KB</span></div>
+      </a>
+      <a class="pcard" href="demo-guide.html">
+        <div class="thumb th-web" style="background:linear-gradient(135deg,#EC4899,#7C3AED)">🎬<div class="mini">导览</div></div>
+        <div class="tt">演示导览</div>
+        <div class="desc">为您准备的 5 步演示路径，让客户在 8-10 分钟内看完所有核心功能</div>
+        <div class="meta"><span class="green">向客户演示</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 患者端 -->
+  <div class="section s1">
+    <h2 class="section-h"><div class="ic">📱</div> 患者端（微信小程序 / 手机 APP） <span class="count">1 个 SPA · 含 5 个子页面</span></h2>
+    <div class="pgrid">
+      <a class="pcard" href="patient/index.html">
+        <div class="thumb th-p">📱<div class="mini">SPA · 5 页</div></div>
+        <div class="tt">手机模拟器 <span class="tag teal">可交互</span></div>
+        <div class="desc">首页 · <b>AI 预问诊</b>（可对话） · 智能分诊 · 报告解读 · 用药提醒 · 健康档案</div>
+        <div class="meta"><span class="green">含真实对话</span><span class="teal">SOAP 摘要</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 医生端 -->
+  <div class="section s2">
+    <h2 class="section-h"><div class="ic">💻</div> 医生端（PC 桌面 / Web） <span class="count">6 个页面</span></h2>
+    <div class="pgrid">
+      <a class="pcard" href="doctor/workbench.html">
+        <div class="thumb th-d">🏠<div class="mini">工作台</div></div>
+        <div class="tt">医生工作台</div>
+        <div class="desc">今日 12 位预约 + AI 病历生成统计 + AI 推荐 + 本月 AI 价值</div>
+        <div class="meta"><span class="purple">主任医师</span></div>
+      </a>
+      <a class="pcard" href="doctor/consultation.html">
+        <span class="star">⭐ 核心</span>
+        <div class="thumb th-d">🎙️<div class="mini">诊间助手</div></div>
+        <div class="tt">AI 诊间助手 <span class="tag amber">核心</span></div>
+        <div class="desc">实时语音转写动画 + SOAP 病历生成 + AI 诊断/用药建议 + 指南依据</div>
+        <div class="meta"><span class="green">语音动画</span><span class="teal">SOAP</span></div>
+      </a>
+      <a class="pcard" href="doctor/records.html">
+        <div class="thumb th-d">📋<div class="mini">病历</div></div>
+        <div class="tt">病历管理</div>
+        <div class="desc">病历列表 + 详情 + 质控评分 + 时间线 + AI 标记</div>
+        <div class="meta"><span class="purple">SOAP 格式</span></div>
+      </a>
+      <a class="pcard" href="doctor/diagnosis.html">
+        <div class="thumb th-d">🧠<div class="mini">诊断辅助</div></div>
+        <div class="tt">AI 诊断辅助</div>
+        <div class="desc">鉴别诊断 + 循证依据 + <b>幻觉防护</b> 4 层校验 + 指南匹配</div>
+        <div class="meta"><span class="green">幻觉防护</span><span class="blue">RAG</span></div>
+      </a>
+      <a class="pcard" href="doctor/prescription.html">
+        <div class="thumb th-d">💊<div class="mini">处方</div></div>
+        <div class="tt">AI 辅助开方</div>
+        <div class="desc">处方明细 + 药物相互作用审核 + 过敏排查 + 医保费用预估</div>
+        <div class="meta"><span class="purple">96/100 评分</span></div>
+      </a>
+      <a class="pcard" href="doctor/quality.html">
+        <div class="thumb th-d">✅<div class="mini">质控</div></div>
+        <div class="tt">AI 病历质控</div>
+        <div class="desc">病历质控评分卡 + 错误标记 + 月度趋势 + 整改建议</div>
+        <div class="meta"><span class="green">96.2 分</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 管理端 -->
+  <div class="section s3">
+    <h2 class="section-h"><div class="ic">📊</div> 管理端（运营驾驶舱 · 深色专业主题） <span class="count">4 个页面</span></h2>
+    <div class="pgrid">
+      <a class="pcard" href="admin/dashboard.html">
+        <div class="thumb th-a">📊<div class="mini" style="background:rgba(255,255,255,.18)">驾驶舱</div></div>
+        <div class="tt">运营驾驶舱</div>
+        <div class="desc">5 KPI + 30 天趋势 + DRG 盈亏 + 实时预警 + 医生效率 + 病种分布</div>
+        <div class="meta"><span class="teal">4 张图表</span></div>
+      </a>
+      <a class="pcard" href="admin/drg.html">
+        <span class="star">⭐ 核心</span>
+        <div class="thumb th-a">💰<div class="mini" style="background:rgba(255,255,255,.18)">DRG 控费</div></div>
+        <div class="tt">DRG/DIP 控费 <span class="tag amber">核心</span></div>
+        <div class="desc">6 例样本超支预警 + AI 优化建议 + ROI 趋势 + 病种盈亏排行</div>
+        <div class="meta"><span class="green">院长最关心</span></div>
+      </a>
+      <a class="pcard" href="admin/quality.html">
+        <div class="thumb th-a">✅<div class="mini" style="background:rgba(255,255,255,.18)">医疗质控</div></div>
+        <div class="tt">医疗质控看板</div>
+        <div class="desc">质控雷达图 + 6 个月趋势 + 科室质控排行 + 不良事件统计</div>
+        <div class="meta"><span class="teal">雷达 + 趋势</span></div>
+      </a>
+      <a class="pcard" href="admin/ai-analytics.html">
+        <div class="thumb th-a">🤖<div class="mini" style="background:rgba(255,255,255,.18)">AI 价值</div></div>
+        <div class="tt">AI 使用价值分析</div>
+        <div class="desc">8 项 AI 能力指标 + 投入产出 ROI + 节省工时统计 + 满意度</div>
+        <div class="meta"><span class="green">ROI 1:8.4</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 科研端 -->
+  <div class="section s5">
+    <h2 class="section-h"><div class="ic">🔬</div> 科研端（Web） <span class="count">4 个页面</span></h2>
+    <div class="pgrid">
+      <a class="pcard" href="research/literature.html">
+        <div class="thumb th-r">🔍<div class="mini">文献</div></div>
+        <div class="tt">AI 文献检索</div>
+        <div class="desc">PubMed / 知网 / 万方多源检索 + 5 篇真实样例 + AI 摘要 + 影响因子</div>
+        <div class="meta"><span class="blue">多源</span><span>AI 摘要</span></div>
+      </a>
+      <a class="pcard" href="research/statistics.html">
+        <div class="thumb th-r">📊<div class="mini">统计</div></div>
+        <div class="tt">AI 统计分析</div>
+        <div class="desc">R 代码生成 + Kaplan-Meier 曲线 + Cox 回归 + 自动选择检验方法</div>
+        <div class="meta"><span class="blue">R 代码</span><span class="teal">KM 曲线</span></div>
+      </a>
+      <a class="pcard" href="research/grant.html">
+        <span class="star">⭐ 核心</span>
+        <div class="thumb th-r">📝<div class="mini">标书</div></div>
+        <div class="tt">国自然标书生成 <span class="tag amber">核心</span></div>
+        <div class="desc">完整 5 大章节生成 + AI 综合评分 92 + 中标率预测 + 自动配图</div>
+        <div class="meta"><span class="green">¥ 58 万项目</span></div>
+      </a>
+      <a class="pcard" href="research/paper.html">
+        <div class="thumb th-r">📚<div class="mini">论文</div></div>
+        <div class="tt">论文写作辅助</div>
+        <div class="desc">中英对照逐句润色 + AI 选刊推荐（IF + 录用率） + 学术润色建议</div>
+        <div class="meta"><span class="blue">中英对照</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 原生客户端 -->
+  <div class="section s1">
+    <h2 class="section-h"><div class="ic">📦</div> 原生客户端工程 <span class="count">2 套 (本轮新增)</span></h2>
+    <div class="pgrid">
+      <a class="pcard" href="../wechat-miniprogram/README.md">
+        <div class="thumb th-m" style="background:linear-gradient(135deg,#10B981,#0EA5A4)">📱<div class="mini">微信小程序</div></div>
+        <div class="tt">患者端微信小程序 <span class="tag teal">原生</span></div>
+        <div class="desc">6 页面 (首页/AI问诊/分诊/报告解读/用药/档案) + 后端对接 + 离线 demo 回退</div>
+        <div class="meta"><span class="green">可导入微信开发工具</span><span>24 个文件</span></div>
+      </a>
+      <a class="pcard" href="../desktop-tauri/README.md">
+        <div class="thumb th-m" style="background:linear-gradient(135deg,#2563EB,#7C3AED)">🖥️<div class="mini">桌面端</div></div>
+        <div class="tt">医生端 PC 桌面端 (Tauri) <span class="tag blue">跨平台</span></div>
+        <div class="desc">复用 Web 医生端 + Tauri 2 打包 + Win/Mac/Linux 三平台 + 体积 < 10MB</div>
+        <div class="meta"><span class="blue">npm run tauri build</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 文档资源 -->
+  <div class="section">
+    <h2 class="section-h" style="color:#475569"><div class="ic" style="background:linear-gradient(135deg,#64748B,#0F172A)">📂</div> 项目文档 & 原始资源 <span class="count">7 份</span></h2>
+    <div class="pgrid">
+      <a class="pcard" href="README.md">
+        <div class="thumb th-doc">📖<div class="mini">README</div></div>
+        <div class="tt">前端 README.md</div>
+        <div class="desc">前端项目说明、目录结构、使用方法</div>
+        <div class="meta"><span>4.8 KB</span></div>
+      </a>
+      <a class="pcard" href="../docs/系统架构说明.md">
+        <div class="thumb th-doc">🏗️<div class="mini">架构</div></div>
+        <div class="tt">系统架构说明 <span class="tag blue">本轮新增</span></div>
+        <div class="desc">4 层架构 + 7 Agent + 12 表 + 部署矩阵 + 数据流</div>
+        <div class="meta"><span>附架构图</span></div>
+      </a>
+      <a class="pcard" href="../docs/API速查表.md">
+        <div class="thumb th-doc">🔌<div class="mini">API</div></div>
+        <div class="tt">API 速查表 <span class="tag blue">40+ 路由</span></div>
+        <div class="desc">40+ REST + 2 WebSocket + 调用示例 + RBAC 矩阵</div>
+        <div class="meta"><span>5.4 KB</span></div>
+      </a>
+      <a class="pcard" href="../docs/手册/01_医生端使用手册.md">
+        <div class="thumb th-doc">🩺<div class="mini">手册</div></div>
+        <div class="tt">医生端使用手册 <span class="tag teal">本轮新增</span></div>
+        <div class="desc">医生 5 分钟上手 + AI 诊间助手 + SOAP 审核 + 快捷键</div>
+        <div class="meta"><span>临床友好</span></div>
+      </a>
+      <a class="pcard" href="../docs/手册/03_运维部署手册.md">
+        <div class="thumb th-doc">⚙️<div class="mini">运维</div></div>
+        <div class="tt">运维部署手册 <span class="tag teal">本轮新增</span></div>
+        <div class="desc">Docker + Nginx + PG + Redis + 备份 + 监控 + 火警 + 应急预案</div>
+        <div class="meta"><span>4.3 KB</span></div>
+      </a>
+      <a class="pcard" href="任务清单.md">
+        <div class="thumb th-doc">📋<div class="mini">任务清单</div></div>
+        <div class="tt">任务清单.md</div>
+        <div class="desc">需求对称性核对表 + 完成度 + 文件清单</div>
+        <div class="meta"><span class="green">100%</span></div>
+      </a>
+      <a class="pcard" href="../PRD原始需求文档/">
+        <div class="thumb th-doc" style="background:linear-gradient(135deg,#475569,#0F172A)">📁<div class="mini">PRD 原文</div></div>
+        <div class="tt">PRD 原始文档（11 份）</div>
+        <div class="desc">主文档 + M1-M6 详细设计 + 用户故事 + API + AI 能力说明</div>
+        <div class="meta"><span>217 KB · 原样保留</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:32px;color:#94A3B8;font-size:12px">
+    MedMind Nexus 医智中枢 · v1.0 最终交付版 · 2026-06-12<br>
+    所有页面均可双击 HTML 在浏览器中直接打开，无需后端
+  </div>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (typeof MedMind === 'undefined') return;
+  const r = await MedMind.ping();
+  const stat = document.createElement('div');
+  stat.style.cssText = 'max-width:980px;margin:0 auto 18px;padding:14px 18px;border-radius:14px;font-size:13px;display:flex;align-items:center;gap:10px;' + (r.ok ? 'background:#DCFCE7;color:#15803D;border:1px solid #86EFAC' : 'background:#FEF3C7;color:#92400E;border:1px solid #FDE68A');
+  if (r.ok) {
+    stat.innerHTML = '✅ <b>后端服务运行中</b> · 版本 v' + r.version + ' · LLM Provider: <code>' + r.llm + '</code> · ' +
+      '<a href="' + MedMind.API_BASE.replace(/\/v1$/, '') + '/docs" target="_blank" style="color:#0F766E;font-weight:600">📖 查看 API 文档</a> · ' +
+      '<a href="login.html" style="color:#0F766E;font-weight:600">🔑 登录</a>';
+  } else {
+    stat.innerHTML = '⚠️ <b>后端未连接</b> (' + (r.error||'') + ') · 页面以本地 demo 模式运行. 要启动后端:<code style="background:#fff;padding:2px 6px;border-radius:4px">cd medmind-backend && uvicorn app.main:app</code>';
+  }
+  const wrap = document.querySelector('.wrap');
+  if (wrap) wrap.insertBefore(stat, wrap.querySelector('.head').nextSibling);
+});
+</script>
+</body>
+</html>

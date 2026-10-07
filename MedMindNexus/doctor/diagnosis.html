@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 诊断辅助 · MedMind Nexus</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<style>
+  .diag-bar{height:10px;background:#E2E8F0;border-radius:5px;overflow:hidden}
+  .diag-bar > span{display:block;height:100%;background:linear-gradient(90deg,#0EA5A4,#2563EB)}
+  .diag-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+  .diag-card .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .diag-card h4{margin:0;font-size:15px}
+  .diag-card .icd{font-family:ui-monospace,monospace;font-size:12px;color:#64748B;margin-left:6px}
+  .conf-pill{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+  .conf-pill.h{background:#FEE2E2;color:#B91C1C}
+  .conf-pill.m{background:#FEF3C7;color:#B45309}
+  .conf-pill.l{background:#DBEAFE;color:#1E40AF}
+  .ev-row{font-size:13px;color:#475569;padding:5px 0;display:flex;gap:6px}
+  .ev-row::before{content:"•";color:var(--primary)}
+</style>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/live-enhance.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">医生端 · v1.0</div></div></div>
+    <a class="nav" href="workbench.html"><span>🏠</span>工作台</a>
+    <a class="nav" href="consultation.html"><span>🎙️</span>AI 诊间助手</a>
+    <a class="nav" href="records.html"><span>📋</span>病历管理</a>
+    <a class="nav active" href="diagnosis.html"><span>🧠</span>AI 诊断辅助</a>
+    <a class="nav" href="prescription.html"><span>💊</span>处方管理</a>
+    <a class="nav" href="quality.html"><span>✅</span>病历质控</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">医生端 / AI 诊断辅助</div><div class="demo-banner">🔬 演示模式 · 数据脱敏</div><div class="user"><div class="avatar">张</div><div><div style="font-weight:600;font-size:13px">张为民</div><div style="font-size:11px;color:var(--muted)">主任医师</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">🧠 AI 诊断辅助</h1>
+      <p class="page-sub">基于患者临床信息，AI 给出诊断建议、鉴别诊断与循证医学依据 · 仅供医生参考，<b>最终诊断须由医生作出</b></p>
+      <div class="grid" style="grid-template-columns:1.2fr 1fr;margin-bottom:18px">
+        <div class="card">
+          <h3><span class="dot"></span> 患者临床信息输入</h3>
+          <table style="font-size:13px">
+            <tr><td style="width:30%;font-weight:600">患者</td><td>李秀芳 · 女 · 56 岁 · 病案号 PT-2026-008342</td></tr>
+            <tr><td style="font-weight:600">主诉</td><td>反复劳力性胸痛 3 天</td></tr>
+            <tr><td style="font-weight:600">现病史</td><td>劳累/爬楼后发作，压榨样痛 1-2 分钟，硝酸甘油可缓解，伴出汗、左肩放射痛</td></tr>
+            <tr><td style="font-weight:600">既往</td><td>高血压 8y、高脂血症 3y、青霉素过敏</td></tr>
+            <tr><td style="font-weight:600">体征</td><td>BP 138/86 · HR 92 · 心律齐，未及病理性杂音</td></tr>
+            <tr><td style="font-weight:600">检查</td><td>LDL-C 4.2↑ · TC 6.8↑ · HbA1c 6.0 · 心电图待做</td></tr>
+            <tr><td style="font-weight:600">家族史</td><td>父亲 65 岁心肌梗死</td></tr>
+          </table>
+          <div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-primary">⚡ 重新分析</button><button class="btn">📋 从病历导入</button><button class="btn">✏️ 编辑信息</button></div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 🎯 AI 总体评估</h3>
+          <div class="alert red" style="margin-bottom:10px">⚠️ <b>高风险</b>：临床特征强烈提示 <b>急性冠脉综合征（ACS）</b>，建议立即心电图 + 肌钙蛋白检查，必要时启动绿色通道。</div>
+          <table>
+            <tr><td>胸痛风险等级（HEART 评分预测）</td><td><b style="color:#EF4444">7 分（高危）</b></td></tr>
+            <tr><td>30 天主要不良心血管事件（MACE）概率</td><td><b style="color:#EF4444">12-18%</b></td></tr>
+            <tr><td>建议处置</td><td><b>急诊心内科 / 胸痛中心</b></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span> 🩺 鉴别诊断（按概率降序）</h3>
+        <div class="diag-card" style="border-left:4px solid #EF4444">
+          <div class="row"><div><h4>1️⃣ 不稳定型心绞痛 <span class="icd">I20.0</span></h4></div><div class="conf-pill h">置信度 92%</div></div>
+          <div class="diag-bar"><span style="width:92%"></span></div>
+          <div style="margin-top:12px"><div style="font-weight:700;font-size:13px;color:#0F766E">📌 支持证据</div>
+            <div class="ev-row">劳力性胸痛 3 天，呈进行性加重</div>
+            <div class="ev-row">压榨样痛 1-2 分钟，符合典型心绞痛性质</div>
+            <div class="ev-row">硝酸甘油可缓解（特异性高）</div>
+            <div class="ev-row">左肩放射痛 + 出汗（典型 ACS 伴随症状）</div>
+            <div class="ev-row">多个心血管危险因素：高血压、高脂血症、女性绝经后、家族史</div>
+          </div>
+          <div style="margin-top:12px"><div style="font-weight:700;font-size:13px;color:#0F766E">🧪 确诊检查</div>
+            <div class="ev-row">12 导联 ECG（必做，立即）</div>
+            <div class="ev-row">肌钙蛋白 cTnI（必做，立即 + 3h 复查）</div>
+            <div class="ev-row">心肌酶谱 CK-MB</div>
+            <div class="ev-row">必要时冠脉造影 CAG</div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-sm btn-primary">采纳为主诊断</button><button class="btn btn-sm">查看完整证据链</button><button class="btn btn-sm">📚 相关指南</button></div>
+        </div>
+        <div class="diag-card" style="border-left:4px solid #F59E0B">
+          <div class="row"><div><h4>2️⃣ 稳定型心绞痛 <span class="icd">I20.8</span></h4></div><div class="conf-pill m">置信度 68%</div></div>
+          <div class="diag-bar"><span style="width:68%;background:linear-gradient(90deg,#F59E0B,#EF4444)"></span></div>
+          <div style="margin-top:10px;font-size:13px;color:#475569"><b>支持</b>：劳力诱发、硝酸甘油可缓解；<br><b>不支持</b>：近期症状加重提示从稳定型→不稳定型进展。</div>
+        </div>
+        <div class="diag-card" style="border-left:4px solid #2563EB">
+          <div class="row"><div><h4>3️⃣ 急性 ST 段抬高型心肌梗死（STEMI） <span class="icd">I21.0</span></h4></div><div class="conf-pill l">置信度 28%</div></div>
+          <div class="diag-bar"><span style="width:28%;background:linear-gradient(90deg,#94A3B8,#2563EB)"></span></div>
+          <div style="margin-top:10px;font-size:13px;color:#475569">待心电图结果，如出现 ST 段抬高 ≥ 1mm 或新发 LBBB → 立即激活胸痛中心。</div>
+        </div>
+        <div class="diag-card" style="border-left:4px solid #94A3B8">
+          <div class="row"><div><h4>4️⃣ 胃食管反流病 <span class="icd">K21.x</span></h4></div><div class="conf-pill l">置信度 12%</div></div>
+          <div class="diag-bar"><span style="width:12%;background:#94A3B8"></span></div>
+          <div style="margin-top:10px;font-size:13px;color:#475569">可能性低：硝酸甘油对 GERD 无效，与本例不符；但可作为排除项。</div>
+        </div>
+        <div class="diag-card" style="border-left:4px solid #94A3B8">
+          <div class="row"><div><h4>5️⃣ 主动脉夹层 <span class="icd">I71.0</span></h4></div><div class="conf-pill l">置信度 6%</div></div>
+          <div class="diag-bar"><span style="width:6%;background:#94A3B8"></span></div>
+          <div style="margin-top:10px;font-size:13px;color:#475569">低概率但<b>不可漏</b>。建议测量双上肢血压差，必要时主动脉 CTA。</div>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">
+        <div class="card">
+          <h3><span class="dot"></span> 📚 循证依据 · Advanced RAG 检索</h3>
+          <div class="alert blue">✅ 已检索 <b>2018 年至今</b> 来源：UpToDate · 中华医学会指南 · ESC/ACC 指南 · PubMed · 共 <b>2,164</b> 条相关文献，AI 选取最相关 <b>5</b> 条作为依据。</div>
+          <table>
+            <tr><th>文献</th><th>相关度</th></tr>
+            <tr><td>2026 ESC 慢性冠脉综合征指南</td><td><b style="color:#0F766E">98%</b></td></tr>
+            <tr><td>2025 ACC/AHA UA/NSTEMI 管理指南</td><td><b style="color:#0F766E">96%</b></td></tr>
+            <tr><td>中华心血管病杂志 · 2024 中国 ACS 诊疗共识</td><td><b style="color:#0F766E">94%</b></td></tr>
+            <tr><td>HEART 评分原始研究 (Backus et al.)</td><td><b>91%</b></td></tr>
+            <tr><td>NEJM 2026 综述 · Acute Coronary Syndromes Update</td><td><b>89%</b></td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 🛡️ 幻觉防护检查</h3>
+          <div class="alert green" style="margin-bottom:8px">✅ <b>1 级 · 证据溯源</b>：所有诊断均关联可追溯的临床指南或权威文献</div>
+          <div class="alert green" style="margin-bottom:8px">✅ <b>2 级 · 规则校验</b>：通过 ICD-10 编码合规性检查 · 通过药物相互作用规则库</div>
+          <div class="alert green" style="margin-bottom:8px">✅ <b>3 级 · 一致性</b>：DeepSeek-R1 Medical + HuatuoGPT-o1 双模型一致性 96.3%</div>
+          <div class="alert amber">⚠️ <b>4 级 · 医生确认</b>：本诊断为 AI 辅助建议，须由主诊医生最终确认后录入病历。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>病历管理 · MedMind Nexus</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<style>
+  .filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .filter-row input,.filter-row select{flex:0 0 auto;width:auto}
+  .filter-row input.search{flex:1;min-width:200px}
+  .qc-mark{font-size:11px;padding:2px 7px;border-radius:99px;font-weight:600}
+</style>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/live-enhance.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">医生端 · v1.0</div></div></div>
+    <a class="nav" href="workbench.html"><span>🏠</span>工作台</a>
+    <a class="nav" href="consultation.html"><span>🎙️</span>AI 诊间助手</a>
+    <a class="nav active" href="records.html"><span>📋</span>病历管理</a>
+    <a class="nav" href="diagnosis.html"><span>🧠</span>AI 诊断辅助</a>
+    <a class="nav" href="prescription.html"><span>💊</span>处方管理</a>
+    <a class="nav" href="quality.html"><span>✅</span>病历质控</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">医生端 / 病历管理</div><div class="demo-banner">🔬 演示模式</div><div class="user"><div class="avatar">张</div><div><div style="font-weight:600;font-size:13px">张为民</div><div style="font-size:11px;color:var(--muted)">主任医师</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">📋 病历管理</h1>
+      <p class="page-sub">共 286 份病历 · 本周新增 26 份 · AI 草稿生成率 92%</p>
+      <div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px">
+        <div class="stat"><div class="label">本月病历</div><div class="value">112</div><div class="delta up">↑ 9% vs 上月</div></div>
+        <div class="stat"><div class="label">AI 草稿采纳率</div><div class="value">92%</div><div class="delta up">↑ 高于平均</div></div>
+        <div class="stat"><div class="label">质控平均分</div><div class="value">96.2</div><div class="delta">科室排名 #2</div></div>
+        <div class="stat"><div class="label">待签字</div><div class="value" style="color:#F59E0B">5</div><div class="delta">2 份距截止 6h</div></div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span> 病历列表</h3>
+        <div class="filter-row">
+          <input class="search" placeholder="🔍 搜索患者姓名 / 病案号 / 诊断关键词">
+          <select><option>全部状态</option><option>已签字</option><option>草稿</option><option>待审核</option></select>
+          <select><option>全部 ICD-10</option><option>I20-I25 缺血性心脏病</option><option>I10-I15 高血压</option><option>E11.x 糖尿病</option></select>
+          <select><option>最近 7 天</option><option>最近 30 天</option><option>本年</option></select>
+          <button class="btn btn-primary">+ 新建病历</button>
+        </div>
+        <table>
+          <tr><th>病案号</th><th>患者</th><th>就诊类型</th><th>主诊断 (ICD-10)</th><th>就诊日期</th><th>AI 草稿</th><th>质控</th><th>状态</th><th>操作</th></tr>
+          <tr><td>PT-2026-008342</td><td>李秀芳 ♀ 56</td><td>门诊复诊</td><td>不稳定型心绞痛 (I20.0)</td><td>2026-06-11</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag green">96 ✓</span></td><td><span class="tag amber">待签字</span></td><td><a class="btn btn-sm btn-primary">审核</a></td></tr>
+          <tr><td>PT-2026-008341</td><td>王志强 ♂ 48</td><td>门诊初诊</td><td>胸闷待查</td><td>2026-06-11</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag amber">88 ⚠</span></td><td><span class="tag amber">待签字</span></td><td><a class="btn btn-sm btn-primary">审核</a></td></tr>
+          <tr><td>PT-2026-008328</td><td>陈丽 ♀ 62</td><td>门诊复诊</td><td>持续性房颤 (I48.1)</td><td>2026-06-10</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag green">98 ✓</span></td><td><span class="tag green">已签字</span></td><td><a class="btn btn-sm">查看</a></td></tr>
+          <tr><td>PT-2026-008319</td><td>刘建国 ♂ 55</td><td>术后复诊</td><td>冠脉支架植入术后 (Z95.5)</td><td>2026-06-10</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag green">94 ✓</span></td><td><span class="tag green">已签字</span></td><td><a class="btn btn-sm">查看</a></td></tr>
+          <tr><td>PT-2026-008301</td><td>赵梅 ♀ 67</td><td>门诊复诊</td><td>慢性心力衰竭 (I50.0)</td><td>2026-06-09</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag green">95 ✓</span></td><td><span class="tag green">已签字</span></td><td><a class="btn btn-sm">查看</a></td></tr>
+          <tr><td>PT-2026-008287</td><td>周伟 ♂ 41</td><td>门诊初诊</td><td>原发性高血压 (I10.x00)</td><td>2026-06-08</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag green">97 ✓</span></td><td><span class="tag green">已签字</span></td><td><a class="btn btn-sm">查看</a></td></tr>
+          <tr><td>PT-2026-008265</td><td>孙华 ♀ 73</td><td>住院</td><td>急性心肌梗死 (I21.0)</td><td>2026-06-07</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag amber">86 ⚠</span></td><td><span class="tag green">已签字</span></td><td><a class="btn btn-sm">查看</a></td></tr>
+          <tr><td>PT-2026-008248</td><td>吴敏 ♀ 35</td><td>门诊初诊</td><td>心律失常待查</td><td>2026-06-06</td><td><span class="tag teal">已生成</span></td><td><span class="qc-mark tag green">93 ✓</span></td><td><span class="tag green">已签字</span></td><td><a class="btn btn-sm">查看</a></td></tr>
+        </table>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;color:#64748B">
+          <div>共 286 条 · 当前第 1-8 条</div>
+          <div style="display:flex;gap:4px"><button class="btn btn-sm" disabled>‹</button><button class="btn btn-sm btn-primary">1</button><button class="btn btn-sm">2</button><button class="btn btn-sm">3</button><button class="btn btn-sm">›</button></div>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">
+        <div class="card">
+          <h3><span class="dot"></span> 📝 病历模板库</h3>
+          <table>
+            <tr><th>模板名</th><th>科室</th><th>使用次数</th></tr>
+            <tr><td>不稳定型心绞痛初诊</td><td>心内科</td><td>62</td></tr>
+            <tr><td>高血压复诊</td><td>心内科</td><td>134</td></tr>
+            <tr><td>冠脉支架术后随访</td><td>心内科</td><td>48</td></tr>
+            <tr><td>房颤抗凝复诊</td><td>心内科</td><td>33</td></tr>
+            <tr><td>心衰复诊</td><td>心内科</td><td>27</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 📊 病种分布（本月）</h3>
+          <table>
+            <tr><th>诊断</th><th>例数</th><th>占比</th></tr>
+            <tr><td>高血压 I10</td><td>34</td><td><div class="progress"><span style="width:90%;background:#10B981"></span></div></td></tr>
+            <tr><td>冠心病 I25</td><td>28</td><td><div class="progress"><span style="width:74%;background:#2563EB"></span></div></td></tr>
+            <tr><td>心绞痛 I20</td><td>18</td><td><div class="progress"><span style="width:48%;background:#F59E0B"></span></div></td></tr>
+            <tr><td>心律失常 I49</td><td>14</td><td><div class="progress"><span style="width:37%;background:#7C3AED"></span></div></td></tr>
+            <tr><td>心衰 I50</td><td>10</td><td><div class="progress"><span style="width:26%;background:#EF4444"></span></div></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

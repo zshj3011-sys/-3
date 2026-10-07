@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedMind Nexus 医智中枢 · 面向中小医疗机构的AI原生智能体平台</title>
+<link rel="stylesheet" href="assets/css/common.css">
+<script src="assets/js/api.js"></script>
+<style>
+  body{background:#fff}
+  .nav-top{height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 8%;position:sticky;top:0;z-index:50}
+  .brand-row{display:flex;align-items:center;gap:10px}
+  .brand-row .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0EA5A4,#2563EB);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px}
+  .brand-row .name{font-weight:800;font-size:17px;color:#0F172A}
+  .brand-row .sub{font-size:11px;color:#64748B}
+  .nav-links a{color:#334155;font-size:14px;margin:0 14px}
+  .hero{padding:80px 8% 60px;background:radial-gradient(1200px 600px at 80% -10%,#CCFBF1 0%,transparent 60%),radial-gradient(1000px 600px at -10% 30%,#DBEAFE 0%,transparent 50%);position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  .hero h1{font-size:48px;line-height:1.18;margin:18px 0 18px;font-weight:800;color:#0F172A}
+  .hero h1 .accent{background:linear-gradient(135deg,#0EA5A4,#2563EB);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .lead{font-size:17px;color:#475569;line-height:1.7;margin-bottom:28px;max-width:560px}
+  .hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .pill{font-size:12px;padding:5px 11px;border-radius:99px;background:#fff;border:1px solid var(--border);color:#0F766E;font-weight:500}
+  .pill .d{width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block;margin-right:6px;vertical-align:middle}
+  .hero-art{position:relative;height:480px}
+  .float-card{position:absolute;background:#fff;box-shadow:0 20px 60px rgba(15,23,42,.12);border-radius:18px;padding:14px 16px;border:1px solid #E2E8F0;font-size:13px}
+  .float-card .title{font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;margin-bottom:10px}
+  .fc1{top:30px;left:0;width:260px}
+  .fc2{top:130px;right:0;width:280px}
+  .fc3{bottom:60px;left:50px;width:300px}
+  .fc4{bottom:0;right:30px;width:240px}
+  .agent-flow{display:flex;align-items:center;gap:4px;font-size:11px;color:#475569}
+  .agent-flow span{padding:3px 7px;background:#F0FDFA;border:1px solid #CCFBF1;border-radius:6px;color:#0F766E;font-weight:600}
+  .agent-flow .arr{color:#94A3B8}
+  .scribble{height:30px;background:linear-gradient(90deg,#CCFBF1,#DBEAFE,#FCE7F3);border-radius:8px;display:flex;align-items:center;padding:0 8px;font-size:11px;color:#0F766E;font-weight:600;animation:pulse 2.4s ease infinite}
+  @keyframes pulse{0%,100%{opacity:.85}50%{opacity:1}}
+  section{padding:80px 8%}
+  section h2{font-size:34px;font-weight:800;text-align:center;margin:0 0 12px;color:#0F172A}
+  section .subtitle{text-align:center;font-size:15px;color:#64748B;max-width:680px;margin:0 auto 48px}
+  .features{background:#F8FAFC}
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .feature{background:#fff;border:1px solid #EEF2F4;border-radius:16px;padding:24px;transition:.2s}
+  .feature:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(15,23,42,.08);border-color:#CCFBF1}
+  .feature .ico{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#0EA5A4,#10B981);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+  .feature h4{margin:0 0 8px;font-size:17px}
+  .feature p{margin:0;color:#64748B;font-size:14px;line-height:1.65}
+  .modules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .module-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;display:flex;gap:16px;align-items:flex-start;text-decoration:none;color:inherit;transition:.2s}
+  .module-card:hover{border-color:var(--primary);box-shadow:0 12px 30px rgba(14,165,164,.12);transform:translateY(-2px);color:inherit}
+  .module-card .m-ico{width:54px;height:54px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;font-weight:800}
+  .m1 .m-ico{background:linear-gradient(135deg,#10B981,#0EA5A4)}
+  .m2 .m-ico{background:linear-gradient(135deg,#7C3AED,#2563EB)}
+  .m3 .m-ico{background:linear-gradient(135deg,#F59E0B,#EF4444)}
+  .m4 .m-ico{background:linear-gradient(135deg,#0EA5A4,#2563EB)}
+  .m-ttl{font-size:18px;font-weight:700;margin:0 0 6px}
+  .m-tag{font-size:11px;padding:2px 7px;border-radius:99px;background:#F0FDFA;color:#0F766E;border:1px solid #CCFBF1;margin-left:6px;vertical-align:middle}
+  .module-card p{margin:0 0 10px;font-size:13px;color:#64748B;line-height:1.6}
+  .module-card .funcs{font-size:12px;color:#475569}
+  .module-card .funcs span{display:inline-block;padding:2px 7px;background:#F1F5F9;border-radius:4px;margin:2px 4px 0 0}
+  .module-card .open{margin-top:10px;color:var(--primary);font-size:13px;font-weight:600}
+  .tech{background:linear-gradient(180deg,#0F172A,#1E293B);color:#E2E8F0}
+  .tech h2{color:#fff}.tech .subtitle{color:#94A3B8}
+  .tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1100px;margin:0 auto}
+  .tech-card{background:#1E293B;border:1px solid #334155;border-radius:12px;padding:18px}
+  .tech-card .t-cat{font-size:11px;color:#0EA5A4;font-weight:700;letter-spacing:.04em;margin-bottom:8px}
+  .tech-card .t-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:6px}
+  .tech-card .t-desc{font-size:12px;color:#94A3B8;line-height:1.55}
+  /* 产品截图展示区 */
+  .showcase{background:linear-gradient(180deg,#F8FAFC 0%,#fff 100%)}
+  .showcase-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+  .showcase-tab{padding:8px 18px;border-radius:99px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:#475569;transition:.2s}
+  .showcase-tab:hover{border-color:var(--primary);color:var(--primary)}
+  .showcase-tab.active{background:linear-gradient(135deg,#0EA5A4,#2563EB);color:#fff;border-color:transparent;box-shadow:0 6px 20px rgba(14,165,164,.25)}
+  .showcase-stage{max-width:1180px;margin:0 auto;background:#0F172A;border-radius:18px;padding:14px;box-shadow:0 30px 80px rgba(15,23,42,.18)}
+  .showcase-frame{background:#fff;border-radius:10px;overflow:hidden;position:relative;aspect-ratio:1366/860}
+  .showcase-frame img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+  .showcase-caption{display:flex;justify-content:space-between;align-items:center;color:#94A3B8;font-size:13px;padding:10px 6px 2px}
+  .showcase-caption .title{color:#fff;font-weight:600}
+  .showcase-mini{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:14px}
+  .showcase-mini img{width:100%;aspect-ratio:1366/860;object-fit:cover;object-position:top;border-radius:6px;cursor:pointer;opacity:.6;border:2px solid transparent;transition:.2s;background:#fff}
+  .showcase-mini img:hover{opacity:.85}
+  .showcase-mini img.active{opacity:1;border-color:#0EA5A4;box-shadow:0 6px 16px rgba(14,165,164,.3)}
+  @media (max-width:900px){
+    .showcase-mini{grid-template-columns:repeat(4,1fr)}
+  }
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1100px;margin:0 auto}
+  .price{background:#fff;border:1px solid var(--border);border-radius:18px;padding:28px;position:relative}
+  .price.featured{border-color:var(--primary);box-shadow:0 20px 40px rgba(14,165,164,.12)}
+  .price .ribbon{position:absolute;top:-12px;right:18px;background:linear-gradient(135deg,#0EA5A4,#2563EB);color:#fff;font-size:11px;padding:4px 10px;border-radius:99px;font-weight:700}
+  .price .name{font-size:15px;color:#64748B;font-weight:600}
+  .price .num{font-size:36px;font-weight:800;margin:8px 0;color:#0F172A}
+  .price .num small{font-size:13px;font-weight:500;color:#64748B}
+  .price ul{list-style:none;padding:0;margin:18px 0 22px}
+  .price ul li{font-size:14px;color:#475569;padding:7px 0 7px 22px;position:relative}
+  .price ul li:before{content:"✓";position:absolute;left:0;color:var(--primary);font-weight:700}
+  footer{background:#0F172A;color:#94A3B8;padding:48px 8% 28px;font-size:13px}
+  footer .ftop{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:28px;border-bottom:1px solid #334155}
+  footer .fcol h5{color:#fff;font-size:14px;margin:0 0 12px}
+  footer .fcol a{display:block;color:#94A3B8;padding:4px 0}
+  footer .fbot{padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;font-size:12px;color:#64748B}
+  @media (max-width:980px){.hero{padding:48px 5% 36px}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:34px}.hero-art{height:380px;margin-top:24px}.fc1{left:0;width:220px}.fc2{right:0;width:240px}.fc3{left:20px;bottom:80px;width:240px}.fc4{right:0;bottom:0;width:200px}section{padding:56px 5%}section h2{font-size:26px}.feature-grid,.modules-grid,.tech-grid,.pricing-grid{grid-template-columns:1fr}.nav-links{display:none}footer .ftop{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav-top">
+  <div class="brand-row">
+    <div class="logo">M</div>
+    <div><div class="name">MedMind Nexus</div><div class="sub">医智中枢 · Medical AI Platform</div></div>
+  </div>
+  <div class="nav-links">
+    <a href="#features">产品特性</a><a href="#modules">四端应用</a>
+    <a href="#showcase">产品实拍</a><a href="#tech">技术架构</a><a href="#pricing">价格</a><a href="#contact">联系我们</a>
+  </div>
+  <div><a class="btn btn-sm" href="sitemap.html" style="margin-right:8px">🗺️ 总览</a><a class="btn btn-sm" href="demo-guide.html" style="margin-right:8px">🎬 演示导览</a><a class="btn btn-sm" href="login.html" style="margin-right:8px">🔑 登录</a><a class="btn btn-primary btn-sm" href="patient/index.html">立即体验</a></div>
+</nav>
+
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="badge-row">
+        <span class="pill"><span class="d"></span>v1.0 · 2026年6月发布</span>
+        <span class="pill">🇨🇳 中文医疗大模型深度优化</span>
+        <span class="pill">🛡️ 等保三级 · NMPA合规</span>
+      </div>
+      <h1>让每一家医院<br/>都能拥有<span class="accent">AI诊疗能力</span></h1>
+      <p class="lead">MedMind Nexus 是一个集 <b>PC桌面端、Web浏览器端、手机APP端、微信小程序端</b> 四位一体的医疗AI智能体平台。通过 <b>多Agent协作</b>、<b>RAG知识库增强</b>、<b>医疗大模型微调</b> 等前沿技术，为中小医院、诊所、药店和医生个人提供 <b>可拆可卖、即插即用</b> 的模块化AI医疗解决方案。</p>
+      <div class="ctas">
+        <a class="btn btn-primary btn-lg" href="doctor/workbench.html">医生工作台 →</a>
+        <a class="btn btn-lg" href="patient/index.html">患者小程序</a>
+        <a class="btn btn-lg" href="admin/dashboard.html">管理驾驶舱</a>
+        <a class="btn btn-lg" href="research/literature.html">科研AI</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="float-card fc1">
+        <div class="title">🩺 AI预问诊摘要</div>
+        <div style="font-size:12px;color:#475569;line-height:1.55"><b>主诉</b>：反复胸痛 3 天<br/><b>现病史</b>：劳累后明显，硝酸甘油可缓解<br/><b>既往</b>：高血压 10y / 糖尿病 5y</div>
+        <div style="margin-top:8px"><span class="tag red">紧急</span> <span class="tag teal">心内科</span></div>
+      </div>
+      <div class="float-card fc2">
+        <div class="title">🎙️ 语音病历实时转写</div>
+        <div class="scribble">医生：胸痛多久了？/ 患者：三天……</div>
+        <div style="margin-top:8px;font-size:12px;color:#475569">已识别 <b>148</b> 字 · 准确率 <b>93.2%</b></div>
+      </div>
+      <div class="float-card fc3">
+        <div class="title">🧠 多Agent协作流程</div>
+        <div class="agent-flow"><span>分诊</span><span class="arr">→</span><span>问诊</span><span class="arr">→</span><span>解读</span><span class="arr">→</span><span>诊断</span><span class="arr">→</span><span>处方</span></div>
+        <div style="margin-top:8px;font-size:12px;color:#64748B">LangGraph 编排 · MCP 工具调用 · A2A 协议</div>
+      </div>
+      <div class="float-card fc4">
+        <div class="title">💰 DRG控费预警</div>
+        <div style="font-size:12px;color:#475569">病例：FB19 经皮冠脉介入<br/>预测费用：<b style="color:#EF4444">¥48,200</b> · 超支 ¥3,200</div>
+        <div class="progress" style="margin-top:8px"><span style="width:78%"></span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="features" class="features">
+  <h2>3 大核心差异化</h2>
+  <p class="subtitle">不是又一个医疗SaaS，而是真正AI原生的智能体平台</p>
+  <div class="feature-grid">
+    <div class="feature"><div class="ico">🤖</div><h4>多Agent协作架构</h4><p>分诊 Agent、预问诊 Agent、病历 Agent、诊断 Agent、处方 Agent 协同完成完整就诊流程，比单 Agent 准确率提升 <b>32%</b>。基于 LangGraph + A2A + MCP 协议构建。</p></div>
+    <div class="feature"><div class="ico">🧩</div><h4>可拆可卖的模块化设计</h4><p>10 大功能模块独立部署、独立定价。客户可按需购买"患者预问诊"、"病历生成"、"DRG控费"等单一模块，也可整合为完整解决方案。</p></div>
+    <div class="feature"><div class="ico">🇨🇳</div><h4>中文医疗场景深度优化</h4><p>基于 DeepSeek-R1 Medical、HuatuoGPT-o1 等中文医疗大模型，符合国内 SOAP 病历规范、ICD-10 编码、DRG 分组规则及 NMPA 合规要求。</p></div>
+    <div class="feature"><div class="ico">🎙️</div><h4>实时语音转病历</h4><p>医生问诊时 AI 实时将对话转写为 SOAP 格式病历草稿，语音识别准确率 &gt; 92%，医学术语 &gt; 88%，节省医生 50% 文书时间。</p></div>
+    <div class="feature"><div class="ico">📚</div><h4>Advanced RAG 知识库</h4><p>Query 重构 + HyDE + Rerank + 上下文压缩四级 RAG 链路，对接临床指南、药典、文献库，召回准确率 &gt; 85%，幻觉率 &lt; 2%。</p></div>
+    <div class="feature"><div class="ico">🛡️</div><h4>医疗级安全合规</h4><p>4 层幻觉防护、字段级 AES-256 加密、PostgreSQL 行级安全策略（RLS）、等保三级认证、可私有化部署，满足三甲医院合规要求。</p></div>
+  </div>
+</section>
+
+<section id="modules">
+  <h2>四端一体 · 全场景覆盖</h2>
+  <p class="subtitle">每一端都是独立可交付的产品，也可联动协作</p>
+  <div class="modules-grid">
+    <a class="module-card m1" href="patient/index.html">
+      <div class="m-ico">M1</div>
+      <div>
+        <div class="m-ttl">患者端应用 <span class="m-tag">微信小程序 · APP</span></div>
+        <p>就诊全流程的 AI 助手：从预问诊、分诊、报告解读到用药提醒和随访，让患者更安心、医生更高效。</p>
+        <div class="funcs"><span>AI 预问诊</span><span>智能分诊</span><span>报告解读</span><span>用药提醒</span><span>健康档案</span></div>
+        <div class="open">立即体验 →</div>
+      </div>
+    </a>
+    <a class="module-card m2" href="doctor/workbench.html">
+      <div class="m-ico">M2</div>
+      <div>
+        <div class="m-ttl">医生端应用 <span class="m-tag">PC · Web · APP</span></div>
+        <p>医生的"第二大脑"：实时语音转病历、AI 诊断辅助、处方审核、检查解读，全流程 AI 协同。</p>
+        <div class="funcs"><span>AI 诊间助手</span><span>病历生成</span><span>诊断辅助</span><span>处方审核</span><span>病历质控</span></div>
+        <div class="open">立即体验 →</div>
+      </div>
+    </a>
+    <a class="module-card m3" href="admin/dashboard.html">
+      <div class="m-ico">M3</div>
+      <div>
+        <div class="m-ttl">管理端应用 <span class="m-tag">Web 驾驶舱</span></div>
+        <p>用数据驱动决策：医院运营驾驶舱、DRG/DIP 医保控费预警、医疗质控看板，让院长一图掌全院。</p>
+        <div class="funcs"><span>运营驾驶舱</span><span>DRG控费</span><span>医疗质控</span><span>AI使用分析</span><span>合理用药</span></div>
+        <div class="open">立即体验 →</div>
+      </div>
+    </a>
+    <a class="module-card m4" href="research/literature.html">
+      <div class="m-ico">M4</div>
+      <div>
+        <div class="m-ttl">科研端应用 <span class="m-tag">Web · 学者协作</span></div>
+        <p>让医生从繁琐科研工作中解放：智能文献检索、统计分析、国自然标书生成、论文润色与选刊。</p>
+        <div class="funcs"><span>文献检索</span><span>统计分析</span><span>标书生成</span><span>论文润色</span><span>项目管理</span></div>
+        <div class="open">立即体验 →</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section id="tech" class="tech">
+  <h2>前沿技术栈</h2>
+  <p class="subtitle">每一项技术选型都对应明确的医疗业务价值</p>
+  <div class="tech-grid">
+    <div class="tech-card"><div class="t-cat">AI / Agent</div><div class="t-name">LangGraph</div><div class="t-desc">多 Agent 工作流编排，支持 Human-in-the-loop 与可审计回溯</div></div>
+    <div class="tech-card"><div class="t-cat">AI / Agent</div><div class="t-name">MCP 协议</div><div class="t-desc">Model Context Protocol，让 Agent 调用 HIS / LIS / PACS 等系统</div></div>
+    <div class="tech-card"><div class="t-cat">AI / Agent</div><div class="t-name">A2A 协议</div><div class="t-desc">Agent 间结构化通信，支持跨厂商 Agent 互操作</div></div>
+    <div class="tech-card"><div class="t-cat">AI / 模型</div><div class="t-name">DeepSeek-R1 Medical</div><div class="t-desc">LoRA 微调中文医疗大模型，支持私有化部署</div></div>
+    <div class="tech-card"><div class="t-cat">AI / RAG</div><div class="t-name">Advanced RAG</div><div class="t-desc">Query 重构 + HyDE + Cohere Rerank + 上下文压缩</div></div>
+    <div class="tech-card"><div class="t-cat">AI / 推理</div><div class="t-name">vLLM + INT8</div><div class="t-desc">推理加速 3x，INT8/INT4 量化降本 60%</div></div>
+    <div class="tech-card"><div class="t-cat">前端</div><div class="t-name">Next.js 15 / Tauri</div><div class="t-desc">Web 端 + PC 桌面端，React 19 + RSC</div></div>
+    <div class="tech-card"><div class="t-cat">前端</div><div class="t-name">Taro 4 + React Native</div><div class="t-desc">小程序 + APP 跨端开发</div></div>
+    <div class="tech-card"><div class="t-cat">后端</div><div class="t-name">FastAPI + Microservice</div><div class="t-desc">微服务架构，Python 异步高并发</div></div>
+    <div class="tech-card"><div class="t-cat">数据库</div><div class="t-name">PostgreSQL 16 + RLS</div><div class="t-desc">行级安全策略，TimescaleDB 时序扩展</div></div>
+    <div class="tech-card"><div class="t-cat">数据库</div><div class="t-name">Milvus / Neo4j</div><div class="t-desc">向量库存知识，图库存医学知识图谱</div></div>
+    <div class="tech-card"><div class="t-cat">运维</div><div class="t-name">K8s + Prometheus</div><div class="t-desc">高可用部署，Grafana + ELK 全栈观测</div></div>
+  </div>
+</section>
+
+<section id="showcase" class="showcase">
+  <h2>产品实拍 · 19 张全端截图</h2>
+  <p class="subtitle">本系统已开发完成并通过实测, 以下截图均为浏览器真实运行实拍, 非示意图.</p>
+  <div class="showcase-tabs">
+    <button class="showcase-tab active" data-cat="all">全部</button>
+    <button class="showcase-tab" data-cat="home">官网/入口</button>
+    <button class="showcase-tab" data-cat="patient">患者端</button>
+    <button class="showcase-tab" data-cat="doctor">医生端</button>
+    <button class="showcase-tab" data-cat="admin">管理端</button>
+    <button class="showcase-tab" data-cat="research">科研端</button>
+  </div>
+  <div class="showcase-stage">
+    <div class="showcase-frame">
+      <img id="showcase-big" src="assets/screenshots/20_医生端_工作台.png" alt="医生端工作台">
+    </div>
+    <div class="showcase-caption">
+      <span class="title" id="showcase-title">医生端 · 工作台</span>
+      <span id="showcase-meta">真实浏览器渲染 · 1366×860</span>
+    </div>
+    <div class="showcase-mini" id="showcase-mini"></div>
+  </div>
+</section>
+
+<script>
+const SHOTS = [
+  {f:"00_官网首页.png",t:"官网 · 首页",c:"home"},
+  {f:"01_登录页.png",t:"统一登录",c:"home"},
+  {f:"02_全产品总览_sitemap.png",t:"全产品 Sitemap",c:"home"},
+  {f:"03_演示导览.png",t:"演示导览",c:"home"},
+  {f:"10_患者端_首页.png",t:"患者端 · 首页 (小程序模拟)",c:"patient"},
+  {f:"20_医生端_工作台.png",t:"医生端 · 工作台",c:"doctor"},
+  {f:"21_医生端_诊间助手.png",t:"医生端 · 诊间助手 (语音→SOAP)",c:"doctor"},
+  {f:"22_医生端_病历.png",t:"医生端 · 病历管理",c:"doctor"},
+  {f:"23_医生端_诊断辅助.png",t:"医生端 · AI 诊断辅助",c:"doctor"},
+  {f:"24_医生端_处方.png",t:"医生端 · AI 处方审核",c:"doctor"},
+  {f:"25_医生端_质控.png",t:"医生端 · 病历质控",c:"doctor"},
+  {f:"30_管理端_驾驶舱.png",t:"管理端 · 运营驾驶舱",c:"admin"},
+  {f:"31_管理端_DRG.png",t:"管理端 · DRG/DIP 控费",c:"admin"},
+  {f:"32_管理端_质控.png",t:"管理端 · 医疗质控",c:"admin"},
+  {f:"33_管理端_AI分析.png",t:"管理端 · AI 使用分析",c:"admin"},
+  {f:"40_科研端_文献检索.png",t:"科研端 · 文献检索",c:"research"},
+  {f:"41_科研端_统计.png",t:"科研端 · 统计分析",c:"research"},
+  {f:"42_科研端_标书.png",t:"科研端 · 国自然标书",c:"research"},
+  {f:"43_科研端_论文.png",t:"科研端 · 论文润色",c:"research"}
+];
+function renderShowcase(cat){
+  const mini = document.getElementById("showcase-mini");
+  mini.innerHTML = "";
+  const list = cat==="all"? SHOTS: SHOTS.filter(s=>s.c===cat);
+  list.forEach((s,i)=>{
+    const im = document.createElement("img");
+    im.src = "assets/screenshots/"+s.f;
+    im.alt = s.t;
+    im.title = s.t;
+    im.dataset.idx = i;
+    if(i===0) im.classList.add("active");
+    im.addEventListener("click",()=>{
+      document.getElementById("showcase-big").src = im.src;
+      document.getElementById("showcase-title").textContent = s.t;
+      mini.querySelectorAll("img").forEach(x=>x.classList.remove("active"));
+      im.classList.add("active");
+    });
+    mini.appendChild(im);
+  });
+  if(list.length){
+    document.getElementById("showcase-big").src = "assets/screenshots/"+list[0].f;
+    document.getElementById("showcase-title").textContent = list[0].t;
+  }
+}
+document.querySelectorAll(".showcase-tab").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll(".showcase-tab").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    renderShowcase(b.dataset.cat);
+  });
+});
+renderShowcase("all");
+</script>
+
+<section id="pricing">
+  <h2>灵活的商业模式</h2>
+  <p class="subtitle">SaaS订阅 · 定制开发 · 私有化部署 · 任你选择</p>
+  <div class="pricing-grid">
+    <div class="price">
+      <div class="name">SaaS 基础版</div>
+      <div class="num">¥1,980<small> / 月 / 医院</small></div>
+      <p style="font-size:13px;color:#64748B;margin:0">适合小型诊所与卫生服务中心</p>
+      <ul><li>限 5 个医生账号</li><li>患者端 + 医生端核心功能</li><li>AI 预问诊每月 1000 次</li><li>云端部署，无需运维</li><li>邮件 + 工单技术支持</li></ul>
+      <a class="btn btn-lg" style="width:100%;justify-content:center" href="#contact">立即咨询</a>
+    </div>
+    <div class="price featured">
+      <div class="ribbon">最受欢迎</div>
+      <div class="name">SaaS 专业版</div>
+      <div class="num">¥3,800<small> / 月 / 医生</small></div>
+      <p style="font-size:13px;color:#64748B;margin:0">适合二级民营医院与连锁医疗集团</p>
+      <ul><li>不限医生账号</li><li>四端全部功能</li><li>AI 调用不限次</li><li>专属客户经理 + 1v1 培训</li><li>SLA 99.9% 可用性</li><li>含 DRG / DIP 控费模块</li></ul>
+      <a class="btn btn-primary btn-lg" style="width:100%;justify-content:center" href="#contact">预约演示</a>
+    </div>
+    <div class="price">
+      <div class="name">私有化部署</div>
+      <div class="num">¥20-100万<small> / 项目</small></div>
+      <p style="font-size:13px;color:#64748B;margin:0">适合三甲医院与医学院科研机构</p>
+      <ul><li>本地化部署，数据不出院</li><li>DeepSeek-R1 私有化大模型</li><li>可定制 Agent 与 RAG 知识库</li><li>等保三级合规交付</li><li>源代码 + 软著归属客户</li><li>含 1 年运维服务</li></ul>
+      <a class="btn btn-lg" style="width:100%;justify-content:center" href="#contact">联系销售</a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="background:linear-gradient(135deg,#0EA5A4 0%,#2563EB 100%);color:#fff;text-align:center">
+  <h2 style="color:#fff">让 AI 走进每一间诊室</h2>
+  <p class="subtitle" style="color:rgba(255,255,255,.85)">立即联系我们，预约一次 30 分钟的产品演示，看看 MedMind Nexus 如何为您的医院降本增效。</p>
+  <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+    <a class="btn btn-lg" style="background:#fff;color:#0F766E;border:none;font-weight:700" href="mailto:hello@medmind-nexus.com">📧 hello@medmind-nexus.com</a>
+    <a class="btn btn-lg" style="background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3)" href="tel:400-888-0000">📞 400-888-0000</a>
+  </div>
+</section>
+
+<footer>
+  <div class="ftop">
+    <div class="fcol">
+      <div class="brand-row" style="margin-bottom:14px"><div class="logo" style="width:32px;height:32px;font-size:14px">M</div><div style="color:#fff;font-weight:700">MedMind Nexus 医智中枢</div></div>
+      <p style="margin:0;line-height:1.7">让每一家医院都能拥有 AI 诊疗能力。<br/>面向中小医疗机构的 AI 原生智能体平台。</p>
+    </div>
+    <div class="fcol"><h5>产品</h5><a href="patient/index.html">患者端</a><a href="doctor/workbench.html">医生端</a><a href="admin/dashboard.html">管理端</a><a href="research/literature.html">科研端</a></div>
+    <div class="fcol"><h5>资源</h5><a href="#">产品文档</a><a href="#">API 接口</a><a href="#">技术博客</a><a href="#">合规白皮书</a></div>
+    <div class="fcol"><h5>公司</h5><a href="#">关于我们</a><a href="#">客户案例</a><a href="#">加入我们</a><a href="#contact">联系销售</a></div>
+  </div>
+  <div class="fbot"><div>© 2026 MedMind Nexus. All rights reserved.</div><div>ICP备：xxxxxxx号 · 等保三级 · NMPA二类医疗器械软件备案</div></div>
+</footer>
+
+<script>
+// 后端连接状态徽章
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof MedMind !== 'undefined') MedMind.mountStatusBadge();
+});
+</script>
+</body>
+</html>

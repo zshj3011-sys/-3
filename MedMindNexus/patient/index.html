@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedMind 患者端 · 微信小程序</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="../assets/js/api.js"></script>
+<style>
+  body{background:linear-gradient(135deg,#F0F9FF,#F0FDFA)}
+  .pwrap{min-height:100vh;padding:20px 20px 40px}
+  .pinfo{max-width:900px;margin:0 auto 18px;background:#fff;border-radius:14px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.04);flex-wrap:wrap;gap:12px}
+  .pinfo .ttl{font-weight:700;display:flex;align-items:center;gap:8px}
+  .pinfo .ttl .lg{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0EA5A4,#2563EB);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+  .pinfo .links a{margin-left:14px;font-size:13px;color:#0F766E}
+  .pages{display:none}.pages.active{display:flex;flex-direction:column;height:100%}
+  .home-banner{background:linear-gradient(135deg,#0EA5A4,#2563EB);border-radius:14px;color:#fff;padding:18px;margin-bottom:16px;position:relative;overflow:hidden}
+  .home-banner h3{margin:0 0 4px;font-size:17px}
+  .home-banner p{margin:0;font-size:12px;opacity:.92}
+  .home-banner .ring{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.12);top:-30px;right:-30px}
+  .quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .quick{background:#fff;border-radius:12px;padding:12px 6px;text-align:center;border:1px solid var(--border);cursor:pointer}
+  .quick:hover{border-color:var(--primary);transform:translateY(-2px);transition:.15s}
+  .quick .ic{font-size:24px;margin-bottom:4px}
+  .quick .lb{font-size:11px;color:#475569}
+  .feature-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+  .feature-card .ttl{font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;margin-bottom:8px}
+  .feature-card .ttl .ic{width:28px;height:28px;border-radius:6px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:15px}
+  .doctor-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#F8FAFC;margin-bottom:8px}
+  .doctor-mini .av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .doctor-mini .nm{font-size:14px;font-weight:600}
+  .doctor-mini .sub{font-size:11px;color:#64748B;margin-top:2px}
+  .chat-input{background:#fff;border-top:1px solid var(--border);padding:10px;display:flex;gap:8px;align-items:center;flex-shrink:0}
+  .chat-input input{flex:1;border-radius:20px;background:#F1F5F9;border:none;padding:9px 14px}
+  .chat-input .send{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700}
+  .chat-msg{margin-bottom:12px;display:flex;gap:8px;align-items:flex-start;max-width:90%}
+  .chat-msg.me{margin-left:auto;flex-direction:row-reverse}
+  .chat-msg .av{width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px}
+  .chat-msg .av.ai{background:linear-gradient(135deg,#0EA5A4,#10B981)}
+  .chat-msg .av.me{background:#2563EB}
+  .chat-msg .bb{background:#fff;border:1px solid var(--border);padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.6}
+  .chat-msg.me .bb{background:#DCFCE7;border-color:#BBF7D0}
+  .quick-reply{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .quick-reply .qr{background:#fff;border:1px solid var(--primary);color:var(--primary);font-size:12px;padding:4px 10px;border-radius:99px;cursor:pointer}
+  .quick-reply .qr:hover{background:var(--primary);color:#fff}
+  .typing{font-size:12px;color:#64748B}
+  .typing .dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#94A3B8;margin:0 1px;animation:bounce 1s infinite}
+  .typing .dot:nth-child(2){animation-delay:.15s}
+  .typing .dot:nth-child(3){animation-delay:.3s}
+  @keyframes bounce{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1);opacity:1}}
+  .summary-box{background:#F0FDFA;border:1px solid #CCFBF1;border-radius:10px;padding:12px;font-size:13px;line-height:1.7;color:#0F766E}
+  .summary-box b{color:#0F172A}
+  .triage-card{background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;border-radius:12px;padding:14px;margin-bottom:10px}
+  .upload-area{border:2px dashed #CBD5E1;border-radius:12px;padding:24px;text-align:center;background:#fff;color:#64748B;cursor:pointer}
+  .upload-area:hover{border-color:var(--primary);background:#F0FDFA}
+  .report-card{background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:12px}
+  .indicator-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #E2E8F0;font-size:13px}
+  .indicator-row .v{font-weight:700}
+  .indicator-row.high .v{color:#EF4444}
+  .indicator-row.low .v{color:#F59E0B}
+  .indicator-row.normal .v{color:#10B981}
+  .pill-tab{display:flex;background:#F1F5F9;padding:3px;border-radius:99px;margin-bottom:10px}
+  .pill-tab a{flex:1;text-align:center;padding:7px 0;font-size:13px;color:#64748B;border-radius:99px;cursor:pointer}
+  .pill-tab a.active{background:#fff;color:var(--primary);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .health-stat{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+  .health-stat .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .health-stat .name{font-size:13px;font-weight:600}
+  .num-big{font-size:24px;font-weight:800}
+  .progress-bar{height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden;margin:6px 0}
+  .progress-bar > span{display:block;height:100%}
+  .green-bar{background:#10B981}.amber-bar{background:#F59E0B}.red-bar{background:#EF4444}
+</style>
+</head>
+<body>
+<div class="pwrap">
+  <div class="pinfo">
+    <div class="ttl"><div class="lg">M</div> MedMind 患者端 · 微信小程序模拟器</div>
+    <div class="links"><a href="../index.html">← 返回官网</a><a href="../doctor/workbench.html">医生端</a><a href="../admin/dashboard.html">管理端</a><a href="../research/literature.html">科研端</a></div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="statusbar"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><span>📶</span><span>📡</span><span>🔋</span></span></div>
+
+      <div class="pages active" id="page-home" style="height:100%">
+        <div class="pheader"><div style="width:24px"></div><div class="ptitle">医智中枢</div><div>🔔</div></div>
+        <div class="pbody">
+          <div class="home-banner"><div class="ring"></div><h3>您好，李女士 👋</h3><p style="margin-top:6px">智能助手 7×24 小时为您守护健康</p><div style="margin-top:14px;display:flex;gap:8px"><span class="tag" style="background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.35)">📅 张医生 14:30 预约</span></div></div>
+          <div class="quick-grid">
+            <div class="quick" onclick="go('triage')"><div class="ic">🩺</div><div class="lb">AI预问诊</div></div>
+            <div class="quick" onclick="go('depts')"><div class="ic">🏥</div><div class="lb">智能分诊</div></div>
+            <div class="quick" onclick="go('report')"><div class="ic">📄</div><div class="lb">报告解读</div></div>
+            <div class="quick" onclick="go('meds')"><div class="ic">💊</div><div class="lb">用药提醒</div></div>
+            <div class="quick"><div class="ic">📋</div><div class="lb">挂号</div></div>
+            <div class="quick" onclick="go('health')"><div class="ic">❤️</div><div class="lb">健康档案</div></div>
+            <div class="quick"><div class="ic">📞</div><div class="lb">在线咨询</div></div>
+            <div class="quick"><div class="ic">⚙️</div><div class="lb">更多</div></div>
+          </div>
+          <div class="section-title">🤖 AI 健康助手推荐</div>
+          <div class="feature-card" onclick="go('triage')" style="cursor:pointer"><div class="ttl"><div class="ic">🩺</div> AI 智能预问诊</div><div style="font-size:12px;color:#64748B;line-height:1.6">看病前先和 AI 聊一聊，5 分钟生成专业问诊摘要。医生看到后能更快理解您的情况，节省候诊时间。</div><div style="margin-top:8px"><span class="tag teal">SOAP 格式</span> <span class="tag blue">紧急预警</span></div></div>
+          <div class="feature-card" onclick="go('report')" style="cursor:pointer"><div class="ttl"><div class="ic">📄</div> 报告 AI 解读</div><div style="font-size:12px;color:#64748B;line-height:1.6">看不懂检查报告？拍张照片上传，AI 用大白话讲清楚每个指标意味着什么。</div><div style="margin-top:8px"><span class="tag amber">异常指标预警</span></div></div>
+          <div class="section-title">⭐ 我的医生</div>
+          <div class="feature-card">
+            <div class="doctor-mini"><div class="av">张</div><div style="flex:1"><div class="nm">张医生 · 主治医师</div><div class="sub">心内科 · 三级医院 · 12 年经验</div></div><button class="btn btn-sm btn-primary">咨询</button></div>
+            <div class="doctor-mini"><div class="av" style="background:linear-gradient(135deg,#10B981,#0EA5A4)">王</div><div style="flex:1"><div class="nm">王医生 · 副主任医师</div><div class="sub">内分泌科 · 8 年经验</div></div><button class="btn btn-sm">咨询</button></div>
+          </div>
+        </div>
+        <div class="ptab"><a class="active" data-tab="home" onclick="go('home')"><div class="ico">🏠</div>首页</a><a data-tab="triage" onclick="go('triage')"><div class="ico">🩺</div>问诊</a><a data-tab="meds" onclick="go('meds')"><div class="ico">💊</div>用药</a><a data-tab="health" onclick="go('health')"><div class="ico">❤️</div>我的</a></div>
+      </div>
+
+      <div class="pages" id="page-triage">
+        <div class="pheader"><div class="back" onclick="go('home')">←</div><div class="ptitle">🩺 AI 预问诊</div><div style="font-size:12px;color:var(--primary)">SOAP</div></div>
+        <div class="pbody" id="chatBox" style="background:#F7FAFB">
+          <div class="alert blue" style="margin-bottom:14px">ℹ️ 我是 MedMind 预问诊助手。请如实回答几个问题，5 分钟内我会为您生成结构化摘要并推送给接诊医生。</div>
+          <div class="chat-msg"><div class="av ai">AI</div><div><div class="bb">您好，我是 MedMind 预问诊助手 🤖<br/>请告诉我，您今天最不舒服的地方是哪里？什么时候开始的呢？</div><div class="quick-reply"><span class="qr" onclick="reply('胸口疼，三天了')">胸口疼，三天了</span><span class="qr" onclick="reply('头疼，今天早上')">头疼，今天早上</span><span class="qr" onclick="reply('咳嗽，已经一周')">咳嗽，已经一周</span></div></div></div>
+        </div>
+        <div class="chat-input"><input id="chatInput" placeholder="描述您的症状..." onkeydown="if(event.key==='Enter'){doSend()}"><div>🎙️</div><div class="send" onclick="doSend()">↑</div></div>
+      </div>
+
+      <div class="pages" id="page-depts">
+        <div class="pheader"><div class="back" onclick="go('home')">←</div><div class="ptitle">🏥 智能分诊</div><div></div></div>
+        <div class="pbody">
+          <div class="triage-card"><div style="font-size:13px;opacity:.9">基于您的症状描述</div><div style="font-size:22px;font-weight:800;margin:4px 0">推荐：心内科</div><div style="font-size:12px;opacity:.9">置信度 92% · 4 位医生可选 · 最近号源 14:30</div></div>
+          <div class="alert amber" style="margin-bottom:12px">⚠️ 您的症状（胸痛、出汗）属于 <b>黄色预警</b>，建议尽快就诊或拨打 120。</div>
+          <div class="section-title">推荐医生（已按擅长方向排序）</div>
+          <div class="list-item"><div class="ico">👨‍⚕️</div><div class="body"><div class="ttl">张为民 · 主任医师 <span class="tag teal">擅长 冠心病</span></div><div class="desc">三级医院 · 心内科 · 评分 4.9 · 14:30 可挂号</div></div><button class="btn btn-sm btn-primary">挂号</button></div>
+          <div class="list-item"><div class="ico" style="background:#EFF6FF;color:#2563EB">👩‍⚕️</div><div class="body"><div class="ttl">李芳 · 副主任医师 <span class="tag blue">擅长 心律失常</span></div><div class="desc">三级医院 · 心内科 · 评分 4.8 · 15:00 可挂号</div></div><button class="btn btn-sm">挂号</button></div>
+          <div class="list-item"><div class="ico" style="background:#FAF5FF;color:#7C3AED">👨‍⚕️</div><div class="body"><div class="ttl">王建国 · 主治医师 <span class="tag teal">擅长 心衰</span></div><div class="desc">二级医院 · 心内科 · 评分 4.7 · 当天号</div></div><button class="btn btn-sm">挂号</button></div>
+          <div class="section-title">附近的医院</div>
+          <div class="list-item"><div class="ico">🏥</div><div class="body"><div class="ttl">第一人民医院</div><div class="desc">三甲 · 距您 1.2km · 心内科有号</div></div></div>
+          <div class="list-item"><div class="ico" style="background:#EFF6FF;color:#2563EB">🏥</div><div class="body"><div class="ttl">中心医院</div><div class="desc">二甲 · 距您 2.8km · 当天号</div></div></div>
+        </div>
+      </div>
+
+      <div class="pages" id="page-report">
+        <div class="pheader"><div class="back" onclick="go('home')">←</div><div class="ptitle">📄 报告 AI 解读</div><div></div></div>
+        <div class="pbody">
+          <div class="upload-area" onclick="document.getElementById('reportResult').style.display='block'"><div style="font-size:36px">📷</div><div style="font-size:14px;margin-top:8px;color:#0F172A;font-weight:600">点击上传 / 拍照</div><div style="font-size:12px;margin-top:4px">支持 PNG/JPG/PDF · OCR + AI 解读</div></div>
+          <div id="reportResult" style="display:none">
+            <div class="report-card">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px">📊 化验单解读（血常规 + 血脂）</div>
+              <div style="font-size:12px;color:#64748B">报告时间：2026-06-08 · 第一人民医院</div>
+              <div style="margin:12px 0">
+                <div class="indicator-row high"><span>低密度脂蛋白胆固醇 LDL-C</span><span class="v">4.2 mmol/L ↑</span></div>
+                <div class="indicator-row high"><span>总胆固醇 TC</span><span class="v">6.8 mmol/L ↑</span></div>
+                <div class="indicator-row normal"><span>白细胞 WBC</span><span class="v">7.1 ×10⁹/L ✓</span></div>
+                <div class="indicator-row normal"><span>血红蛋白 HGB</span><span class="v">132 g/L ✓</span></div>
+                <div class="indicator-row low"><span>高密度脂蛋白 HDL-C</span><span class="v">0.85 mmol/L ↓</span></div>
+              </div>
+              <div class="alert red" style="margin-bottom:10px">⚠️ <b>异常发现：血脂偏高</b><br/>您的低密度脂蛋白（"坏胆固醇"）和总胆固醇均高于正常值，提示血脂代谢异常，是心血管疾病的危险因素。</div>
+              <div class="summary-box"><b>🤖 AI 通俗解读：</b><br/>简单说，您体内的"坏胆固醇"偏多、"好胆固醇"偏少，长期下去容易引起动脉硬化和心血管疾病。<br/><br/><b>建议：</b><br/>① 饮食上少吃油炸、肥肉、动物内脏；<br/>② 每周至少 150 分钟中等强度运动；<br/>③ 4-6 周后复查，如仍异常请就诊；<br/>④ 如您已有高血压/糖尿病，建议尽早到心内科就诊。</div>
+              <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary btn-sm" style="flex:1" onclick="go('depts')">挂号心内科</button><button class="btn btn-sm" style="flex:1">保存到健康档案</button></div>
+            </div>
+          </div>
+          <div class="section-title">📁 历史报告</div>
+          <div class="list-item"><div class="ico">🩻</div><div class="body"><div class="ttl">胸部 CT 平扫</div><div class="desc">2026-05-10 · 第一人民医院 · 已解读</div></div></div>
+          <div class="list-item"><div class="ico" style="background:#FEF3C7;color:#B45309">🧪</div><div class="body"><div class="ttl">心肌酶谱</div><div class="desc">2026-04-22 · 中心医院 · 已解读</div></div></div>
+        </div>
+      </div>
+
+      <div class="pages" id="page-meds">
+        <div class="pheader"><div class="back" onclick="go('home')">←</div><div class="ptitle">💊 用药提醒</div><div>+</div></div>
+        <div class="pbody">
+          <div class="pill-tab"><a class="active">今日</a><a>本周</a><a>历史</a></div>
+          <div class="alert green" style="margin-bottom:10px">✅ 今日还需服药 <b>2 次</b> · 本月依从率 <b>93%</b> 👍</div>
+          <div class="feature-card" style="border-left:3px solid #10B981"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:600;font-size:14px">阿托伐他汀钙片 20mg</div><div style="font-size:12px;color:#64748B;margin-top:2px">每晚 1 次 · 22:00</div></div><span class="tag green">已服用</span></div></div>
+          <div class="feature-card" style="border-left:3px solid #F59E0B"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:600;font-size:14px">硝苯地平控释片 30mg</div><div style="font-size:12px;color:#64748B;margin-top:2px">每日 1 次 · 8:00 ⏰</div><div style="font-size:11px;color:#F59E0B;margin-top:3px">⏰ 14 分钟后提醒</div></div><button class="btn btn-sm btn-primary">确认</button></div></div>
+          <div class="feature-card" style="border-left:3px solid #94A3B8"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:600;font-size:14px">阿司匹林肠溶片 100mg</div><div style="font-size:12px;color:#64748B;margin-top:2px">每日 1 次 · 12:00（餐后）</div></div><span class="tag">待服</span></div></div>
+          <div class="section-title">🤖 AI 用药提醒</div>
+          <div class="alert amber">⚠️ 提示：您正在服用<b>阿托伐他汀</b>，请避免同时大量饮用<b>葡萄柚汁</b>，可能影响药物代谢。</div>
+          <div class="alert blue" style="margin-top:8px">📋 您下次随访时间：<b>2026-06-20</b>，张医生将通过 AI 电话回访您的用药情况。</div>
+          <div class="section-title">📝 用药记录</div>
+          <table style="background:#fff;border-radius:10px;overflow:hidden">
+            <tr><th>日期</th><th>药品</th><th>状态</th></tr>
+            <tr><td>06-10</td><td>阿托伐他汀</td><td><span class="tag green">已服</span></td></tr>
+            <tr><td>06-10</td><td>硝苯地平</td><td><span class="tag green">已服</span></td></tr>
+            <tr><td>06-09</td><td>阿司匹林</td><td><span class="tag amber">漏服</span></td></tr>
+            <tr><td>06-09</td><td>阿托伐他汀</td><td><span class="tag green">已服</span></td></tr>
+          </table>
+        </div>
+        <div class="ptab"><a data-tab="home" onclick="go('home')"><div class="ico">🏠</div>首页</a><a data-tab="triage" onclick="go('triage')"><div class="ico">🩺</div>问诊</a><a class="active" data-tab="meds" onclick="go('meds')"><div class="ico">💊</div>用药</a><a data-tab="health" onclick="go('health')"><div class="ico">❤️</div>我的</a></div>
+      </div>
+
+      <div class="pages" id="page-health">
+        <div class="pheader"><div class="back" onclick="go('home')">←</div><div class="ptitle">❤️ 我的健康</div><div>⚙️</div></div>
+        <div class="pbody">
+          <div class="feature-card" style="background:linear-gradient(135deg,#0EA5A4,#2563EB);color:#fff;border:none">
+            <div style="display:flex;align-items:center;gap:12px"><div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:24px">👤</div><div><div style="font-size:17px;font-weight:700">李秀芳</div><div style="font-size:12px;opacity:.9;margin-top:2px">女 · 56 岁 · 高血压 · 高脂血症</div></div></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;text-align:center"><div><div style="font-size:18px;font-weight:700">12</div><div style="font-size:11px;opacity:.85">就诊次数</div></div><div><div style="font-size:18px;font-weight:700">3</div><div style="font-size:11px;opacity:.85">慢病管理</div></div><div><div style="font-size:18px;font-weight:700">93%</div><div style="font-size:11px;opacity:.85">用药依从率</div></div></div>
+          </div>
+          <div class="section-title">📊 健康指标趋势</div>
+          <div class="health-stat"><div class="top"><div><div class="name">收缩压</div><div class="num-big">138 <small style="font-size:13px;color:#64748B">mmHg</small></div></div><div style="text-align:right"><span class="tag amber">偏高</span><div style="font-size:11px;color:#64748B;margin-top:6px">较上次 ↑3</div></div></div><div class="progress-bar"><span class="amber-bar" style="width:72%"></span></div><div style="font-size:11px;color:#64748B">正常范围：&lt;120 / 优秀：&lt;130 / 1级高血压：140-159</div></div>
+          <div class="health-stat"><div class="top"><div><div class="name">空腹血糖</div><div class="num-big">5.8 <small style="font-size:13px;color:#64748B">mmol/L</small></div></div><div style="text-align:right"><span class="tag green">正常</span><div style="font-size:11px;color:#64748B;margin-top:6px">较上次 ↓0.2</div></div></div><div class="progress-bar"><span class="green-bar" style="width:55%"></span></div></div>
+          <div class="health-stat"><div class="top"><div><div class="name">LDL 胆固醇</div><div class="num-big">4.2 <small style="font-size:13px;color:#64748B">mmol/L</small></div></div><div style="text-align:right"><span class="tag red">偏高</span><div style="font-size:11px;color:#64748B;margin-top:6px">较上次 ↑0.5</div></div></div><div class="progress-bar"><span class="red-bar" style="width:85%"></span></div></div>
+          <div class="section-title">🏥 就诊记录</div>
+          <div class="list-item"><div class="ico">🩺</div><div class="body"><div class="ttl">心内科 · 张为民主任</div><div class="desc">2026-05-22 · 高血压复诊</div></div></div>
+          <div class="list-item"><div class="ico" style="background:#FEF3C7;color:#B45309">🧪</div><div class="body"><div class="ttl">检验科 · 血常规+血脂</div><div class="desc">2026-06-08 · 已 AI 解读</div></div></div>
+          <div class="section-title">🔐 隐私与授权</div>
+          <div class="feature-card" style="font-size:13px">您的健康数据已加密存储（AES-256），仅授权医生可查看。<br/><a style="color:var(--primary)">管理授权 →</a></div>
+        </div>
+        <div class="ptab"><a data-tab="home" onclick="go('home')"><div class="ico">🏠</div>首页</a><a data-tab="triage" onclick="go('triage')"><div class="ico">🩺</div>问诊</a><a data-tab="meds" onclick="go('meds')"><div class="ico">💊</div>用药</a><a class="active" data-tab="health" onclick="go('health')"><div class="ico">❤️</div>我的</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+function go(p){document.querySelectorAll('.pages').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');document.querySelectorAll('.ptab a').forEach(a=>{a.classList.toggle('active', a.dataset.tab===p);});}
+const chatBox = document.getElementById('chatBox');
+const chatInput = document.getElementById('chatInput');
+let qStep = 0;
+const aiScript = [
+  {ask:'明白了。请问疼痛主要在胸口的哪个位置？是闷痛、刺痛还是压榨样疼？',quick:['闷痛','压榨样','刺痛']},
+  {ask:'活动后、安静时、还是吃饱饭后疼？大概持续多久能缓解？',quick:['活动后','安静时也疼','吃饭后']},
+  {ask:'除了胸痛，您有没有伴随的症状？比如出汗、气短、恶心或左肩放射痛？',quick:['有出汗','气短','左肩疼']},
+  {ask:'您是否有高血压、糖尿病、高脂血症？最近在吃什么药？',quick:['有高血压','有糖尿病','在吃他汀']},
+  {ask:'最后一个问题：您是否吸烟？家里直系亲属有没有心脏病史？',quick:['吸烟','父亲心梗','都没有']},
+];
+function reply(t){chatInput.value = t;doSend();}
+function appendMsg(side, text, quick){const isMe = side==='me';const html = `<div class="chat-msg ${isMe?'me':''}"><div class="av ${isMe?'me':'ai'}">${isMe?'我':'AI'}</div><div><div class="bb">${text}</div>${quick? '<div class="quick-reply">'+quick.map(q=>`<span class="qr" onclick="reply('${q}')">${q}</span>`).join('')+'</div>':''}</div></div>`;chatBox.insertAdjacentHTML('beforeend', html);chatBox.scrollTop = chatBox.scrollHeight;}
+function appendTyping(){chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg" id="typing"><div class="av ai">AI</div><div class="bb"><span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></div></div>`);chatBox.scrollTop = chatBox.scrollHeight;}
+function removeTyping(){const t=document.getElementById('typing');if(t)t.remove()}
+// ============ 后端接入: 调用真实 AI 预问诊 API =============
+let triageSessionId = null;
+async function ensureTriageSession() {
+  if (triageSessionId) return triageSessionId;
+  try {
+    const r = await MedMind.Triage.start({});
+    triageSessionId = r.session_id;
+    return triageSessionId;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function doSend(){
+  const v = chatInput.value.trim();
+  if(!v) return;
+  appendMsg('me', v);
+  chatInput.value='';
+  appendTyping();
+
+  // 优先调后端 AI
+  let usedBackend = false;
+  if (typeof MedMind !== 'undefined') {
+    try {
+      const sid = await ensureTriageSession();
+      if (sid) {
+        const r = await MedMind.Triage.send(sid, v);
+        removeTyping();
+        if (r.completed) {
+          // 生成 SOAP 摘要卡片
+          appendMsg('ai', r.ai_message.content);
+          const s = (r.summary && r.summary.soap) || {};
+          const cc = r.summary?.chief_complaint || '结果';
+          const dept = r.summary?.suggested_department || '心内科';
+          const level = r.summary?.triage_level || 'yellow';
+          const conf = Math.round((r.summary?.confidence || 0) * 100);
+          const levelMap = { red: ['紧急 · 红色预警', '#EF4444'], yellow: ['黄色预警', '#F59E0B'], green: ['指导就诊', '#10B981'] };
+          const tag = levelMap[level] || levelMap.yellow;
+          chatBox.insertAdjacentHTML('beforeend',
+            '<div class="summary-box" style="margin-top:10px"><b>📋 预问诊摘要(SOAP 格式)</b><br><br>' +
+            '<b>S 主诉:</b>' + (s.S||'-') + '<br>' +
+            '<b>O 客观:</b>' + (s.O||'-') + '<br>' +
+            '<b>A 评估:</b><b style="color:#EF4444">' + (s.A||'-') + '</b><br>' +
+            '<b>P 计划:</b>' + (s.P||'-') + '<br><br>' +
+            '<span class="tag red" style="background:' + tag[1] + '22;color:' + tag[1] + '">' + tag[0] + '</span> ' +
+            '<span class="tag teal">' + dept + '</span> ' +
+            '<span class="tag blue">置信度 ' + conf + '%</span></div>' +
+            '<div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-primary" style="flex:1" onclick="go(\'depts\')">立即挂号' + dept + '</button><button class="btn" style="flex:1">推送给医生</button></div>'
+          );
+          chatBox.scrollTop = chatBox.scrollHeight;
+        } else {
+          // 继续追问
+          appendMsg('ai', r.ai_message.content, r.ai_message.quick_replies);
+        }
+        usedBackend = true;
+      }
+    } catch (e) {
+      console.warn('Triage API 失败, 退化本地脚本:', e.message);
+    }
+  }
+
+  if (!usedBackend) {
+    // 退化原本地脚本
+    setTimeout(()=>{removeTyping();if(qStep < aiScript.length){appendMsg('ai', aiScript[qStep].ask, aiScript[qStep].quick);qStep++;}else{appendMsg('ai', '✅ 信息采集完毕，正在为您生成预问诊摘要...');setTimeout(()=>{appendTyping();setTimeout(()=>{removeTyping();chatBox.insertAdjacentHTML('beforeend', `<div class="summary-box" style="margin-top:10px"><b>📋 预问诊摘要（SOAP 格式）</b><br/><br/><b>S 主诉：</b>反复胸痛 3 天，劳累后明显，压榨样痛。<br/><b>O 客观信息：</b>伴出汗、左肩放射痛，硝酸甘油可缓解 5-10 分钟。<br/><b>A 评估：</b>高度怀疑<b style="color:#EF4444">不稳定型心绞痛 / 心肌缺血</b>，建议尽快就诊。<br/><b>P 计划：</b>推荐心内科主任医师，今日下午 14:30 可挂号；建议先做心电图、心肌酶谱、肌钙蛋白检查。<br/><br/><span class="tag red">紧急 · 黄色预警</span> <span class="tag teal">心内科</span> <span class="tag blue">置信度 92%</span></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn btn-primary" style="flex:1" onclick="go(\'depts\')">立即挂号心内科</button><button class="btn" style="flex:1">推送给医生</button></div>`);chatBox.scrollTop = chatBox.scrollHeight;}, 1400);}, 600);}}, 900);
+  }
+}
+
+// 启动后端状态指示器
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof MedMind !== 'undefined') MedMind.mountStatusBadge();
+});
+</script>
+</body>
+</html>

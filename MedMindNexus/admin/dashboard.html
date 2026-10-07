@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>运营驾驶舱 · MedMind Nexus 管理端</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="../assets/js/api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body{background:#0F172A;color:#E2E8F0}.app-shell{background:#0F172A}
+  .topbar{background:#1E293B;border-bottom:1px solid #334155}.topbar .crumb{color:#94A3B8}.topbar .user{color:#E2E8F0}
+  .content{background:#0B1326}.page-title{color:#fff}.page-sub{color:#94A3B8}
+  .card{background:#1E293B;border:1px solid #334155;color:#E2E8F0}.card h3{color:#fff}.card h3 .dot{background:#22D3EE}
+  .stat{background:#1E293B;border:1px solid #334155}.stat .label{color:#94A3B8}.stat .value{color:#fff}
+  table{color:#CBD5E1}th{background:#0F172A;color:#94A3B8;border-bottom:1px solid #334155}td{border-bottom:1px solid #334155}tr:hover td{background:#162038}
+  .tag{background:#334155;color:#CBD5E1}.tag.green{background:rgba(16,185,129,.2);color:#34D399}.tag.red{background:rgba(239,68,68,.2);color:#F87171}.tag.amber{background:rgba(245,158,11,.2);color:#FBBF24}.tag.blue{background:rgba(37,99,235,.2);color:#60A5FA}.tag.teal{background:rgba(14,165,164,.2);color:#5EEAD4}
+  .alert.amber{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#FCD34D}.alert.red{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#FCA5A5}.alert.blue{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.3);color:#93C5FD}.alert.green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:#86EFAC}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">管理端 · 驾驶舱</div></div></div>
+    <div class="group">运营管理</div>
+    <a class="nav active" href="dashboard.html"><span>📊</span>运营驾驶舱</a>
+    <a class="nav" href="drg.html"><span>💰</span>DRG/DIP 控费</a>
+    <a class="nav" href="quality.html"><span>✅</span>医疗质控</a>
+    <a class="nav" href="ai-analytics.html"><span>🤖</span>AI 使用分析</a>
+    <div class="group">系统</div>
+    <a class="nav"><span>👥</span>用户管理</a>
+    <a class="nav"><span>🏢</span>科室配置</a>
+    <a class="nav"><span>📜</span>审计日志</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">管理端 / 运营驾驶舱</div><div class="demo-banner">📊 演示数据 · 第一人民医院</div><div class="user"><div class="avatar">李</div><div><div style="font-weight:600;font-size:13px;color:#fff">李院长</div><div style="font-size:11px;color:#94A3B8">院长 · 第一人民医院</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">📊 医院运营驾驶舱</h1>
+      <p class="page-sub">实时数据 · 2026-06-11 14:32 更新 · 第一人民医院</p>
+      <div class="grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:18px">
+        <div class="stat"><div class="label">今日门诊量</div><div class="value">1,287</div><div class="delta up">↑ 8.2% vs 昨日</div></div>
+        <div class="stat"><div class="label">在院人数</div><div class="value">486</div><div class="delta">床位使用率 92%</div></div>
+        <div class="stat"><div class="label">今日营收</div><div class="value">¥2,184K</div><div class="delta up">↑ 6.4%</div></div>
+        <div class="stat"><div class="label">DRG 盈亏</div><div class="value" style="color:#34D399">+¥42K</div><div class="delta">本月累计 +¥520K</div></div>
+        <div class="stat"><div class="label">AI 使用率</div><div class="value">82%</div><div class="delta up">↑ 高于行业 35%</div></div>
+      </div>
+      <div class="grid" style="grid-template-columns:1.4fr 1fr">
+        <div class="card"><h3><span class="dot"></span> 📈 近 30 天门诊量与营收趋势</h3><canvas id="trendChart" height="100"></canvas></div>
+        <div class="card">
+          <h3><span class="dot"></span> 🏥 各科室今日诊疗量 Top 8</h3>
+          <table>
+            <tr><th>科室</th><th>诊疗量</th><th>占比</th><th>AI 使用</th></tr>
+            <tr><td>内科</td><td>284</td><td><div class="progress"><span style="width:90%;background:#22D3EE"></span></div></td><td><span class="tag green">88%</span></td></tr>
+            <tr><td>外科</td><td>196</td><td><div class="progress"><span style="width:62%;background:#A78BFA"></span></div></td><td><span class="tag green">82%</span></td></tr>
+            <tr><td>儿科</td><td>158</td><td><div class="progress"><span style="width:50%;background:#FB923C"></span></div></td><td><span class="tag green">78%</span></td></tr>
+            <tr><td>妇科</td><td>134</td><td><div class="progress"><span style="width:42%;background:#F472B6"></span></div></td><td><span class="tag amber">68%</span></td></tr>
+            <tr><td>骨科</td><td>112</td><td><div class="progress"><span style="width:35%;background:#34D399"></span></div></td><td><span class="tag green">85%</span></td></tr>
+            <tr><td>眼科</td><td>87</td><td><div class="progress"><span style="width:28%;background:#60A5FA"></span></div></td><td><span class="tag amber">72%</span></td></tr>
+            <tr><td>耳鼻喉</td><td>72</td><td><div class="progress"><span style="width:23%;background:#FBBF24"></span></div></td><td><span class="tag green">81%</span></td></tr>
+            <tr><td>皮肤</td><td>64</td><td><div class="progress"><span style="width:20%;background:#A78BFA"></span></div></td><td><span class="tag amber">66%</span></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:18px">
+        <div class="card"><h3><span class="dot"></span> 💰 今日医保 DRG 盈亏</h3><canvas id="drgChart" height="160"></canvas><div class="alert green" style="margin-top:10px;font-size:12px">✓ 今日 156 例医保病案，132 例盈余，24 例预警，<b>总体盈余 ¥42K</b></div></div>
+        <div class="card">
+          <h3><span class="dot"></span> 🚦 实时预警</h3>
+          <div class="alert red" style="margin-bottom:8px">🚨 <b>急诊胸痛绿色通道</b>：3 例急性 ACS 患者，已激活胸痛中心。</div>
+          <div class="alert amber" style="margin-bottom:8px">⚠️ <b>DRG 超支预警</b>：8 例病案预测费用超支，请相关主管医师关注。</div>
+          <div class="alert blue" style="margin-bottom:8px">ℹ️ <b>床位预警</b>：心内科 ICU 床位使用率 100%，建议协调资源。</div>
+          <div class="alert green">✓ <b>感染监控</b>：今日无医院感染事件上报。</div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 👨‍⚕️ 医生效率排行（本月）</h3>
+          <table>
+            <tr><th>医生</th><th>接诊数</th><th>AI节省时间</th></tr>
+            <tr><td>张为民 心内</td><td>412</td><td><b style="color:#34D399">47h</b></td></tr>
+            <tr><td>李芳 心内</td><td>388</td><td><b style="color:#34D399">42h</b></td></tr>
+            <tr><td>王刚 内科</td><td>356</td><td><b style="color:#34D399">38h</b></td></tr>
+            <tr><td>陈静 妇科</td><td>342</td><td><b>35h</b></td></tr>
+            <tr><td>赵强 外科</td><td>320</td><td><b>33h</b></td></tr>
+            <tr><td>钱伟 骨科</td><td>298</td><td><b>30h</b></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">
+        <div class="card"><h3><span class="dot"></span> 🩺 病种分布 TOP 10</h3><canvas id="diseaseChart" height="160"></canvas></div>
+        <div class="card"><h3><span class="dot"></span> 📊 患者满意度趋势</h3><canvas id="satChart" height="160"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+Chart.defaults.color = '#94A3B8'; Chart.defaults.borderColor = '#334155';
+new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:Array.from({length:30},(_,i)=>`6-${i+1}`),datasets:[{label:'门诊量',data:[1080,1120,980,1230,1280,1310,1190,1240,1280,1110,1290,1320,1380,1240,1190,1280,1340,1290,1410,1380,1290,1250,1330,1370,1290,1240,1320,1380,1290,1287],borderColor:'#22D3EE',backgroundColor:'rgba(34,211,238,.12)',tension:.35,fill:true,yAxisID:'y'},{label:'营收（万元）',data:[182,189,164,205,213,219,200,209,213,184,217,219,229,209,200,213,224,217,234,229,214,209,222,230,215,209,220,229,215,218],borderColor:'#A78BFA',backgroundColor:'rgba(167,139,250,.12)',tension:.35,fill:true,yAxisID:'y1'}]},options:{plugins:{legend:{position:'top'}},scales:{y:{position:'left',grid:{color:'#1E293B'}},y1:{position:'right',grid:{display:false}}}}});
+new Chart(document.getElementById('drgChart'),{type:'doughnut',data:{labels:['盈余','持平','超支预警','严重超支'],datasets:[{data:[132,16,24,4],backgroundColor:['#34D399','#60A5FA','#FBBF24','#F87171'],borderColor:'#1E293B',borderWidth:2}]},options:{plugins:{legend:{position:'right'}}}});
+new Chart(document.getElementById('diseaseChart'),{type:'bar',data:{labels:['高血压','冠心病','糖尿病','上呼吸道感染','肺炎','胃炎','失眠','腰椎间盘','骨折','头痛'],datasets:[{label:'本月例数',data:[834,612,548,512,432,389,356,312,287,265],backgroundColor:['#22D3EE','#A78BFA','#FB923C','#34D399','#60A5FA','#F472B6','#FBBF24','#0EA5A4','#7C3AED','#EF4444']}]},options:{indexAxis:'y',plugins:{legend:{display:false}}}});
+new Chart(document.getElementById('satChart'),{type:'line',data:{labels:['1月','2月','3月','4月','5月','6月'],datasets:[{label:'患者满意度',data:[87.2,88.6,89.4,90.1,91.5,92.8],borderColor:'#34D399',backgroundColor:'rgba(52,211,153,.12)',tension:.35,fill:true},{label:'NPS 推荐值',data:[62,65,68,70,72,75],borderColor:'#22D3EE',backgroundColor:'rgba(34,211,238,.12)',tension:.35,fill:true}]},options:{plugins:{legend:{position:'top'}}}});
+</script>
+<script>
+// 增量脚本: 调用后端获取真实驾驶舱数据
+document.addEventListener('DOMContentLoaded', async () => {
+  MedMind.mountStatusBadge();
+  try {
+    const d = await MedMind.Admin.dashboard();
+    // 更新 KPI
+    const statEls = document.querySelectorAll('.grid .stat');
+    d.kpis.forEach((kpi, i) => {
+      if (statEls[i]) {
+        const v = statEls[i].querySelector('.value');
+        const dlt = statEls[i].querySelector('.delta');
+        if (v) v.textContent = kpi.value;
+        if (dlt) {
+          dlt.textContent = (kpi.trend === 'up' ? '↑ ' : '') + kpi.delta;
+          dlt.className = 'delta ' + (kpi.trend === 'up' ? 'up' : '');
+        }
+      }
+    });
+    // 更新趋势图 (如果 trend 有数据)
+    if (window.Chart && d.trend && d.trend.length) {
+      const inst = Chart.getChart('trendChart');
+      if (inst) {
+        inst.data.labels = d.trend.map(x => x.date.slice(5));
+        inst.data.datasets[0].data = d.trend.map(x => x.outpatient);
+        inst.data.datasets[1].data = d.trend.map(x => x.revenue_wan);
+        inst.update();
+      }
+    }
+    console.log('[驾驶舱] 数据已加载:', d.raw_stats);
+  } catch (e) {
+    console.warn('后端未连接,使用默认演示数据:', e.message);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MedMind Nexus 医生工作站",
+  "version": "1.0.0",
+  "identifier": "com.medmind.doctor",
+  "build": {
+    "frontendDist": "../../MedMindNexus",
+    "devUrl": "http://localhost:8000/web/",
+    "beforeDevCommand": "",
+    "beforeBuildCommand": ""
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "MedMind Nexus · 医生工作站",
+        "label": "main",
+        "url": "doctor/workbench.html",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 1100,
+        "minHeight": 700,
+        "resizable": true,
+        "decorations": true,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "fullscreen": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' http://localhost:8000 https://api.medmind.example.com; font-src 'self' data:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "dmg", "appimage", "deb"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "copyright": "© 2026 MedMind Nexus · All rights reserved",
+    "category": "Healthcare",
+    "shortDescription": "面向中小医疗机构的 AI 智能体平台 - 医生工作站",
+    "longDescription": "MedMind Nexus 医生工作站集成 AI 诊间助手 (语音转 SOAP 病历)、诊断辅助 (4 层幻觉防护)、AI 处方审核、病历质控等全套智能诊疗能力。"
+  }
+}

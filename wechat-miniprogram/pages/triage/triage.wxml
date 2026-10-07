@@ -1,0 +1,88 @@
+<!-- AI 预问诊 -->
+<view class="triage-page">
+  <view wx:if="{{!backendOnline}}" class="offline-bar">
+    📡 演示数据模式 · 连接后端后体验真实多轮 AI
+  </view>
+
+  <!-- 进度条 -->
+  <view class="progress-bar">
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{progress}}%"></view>
+    </view>
+    <view class="progress-text">第 {{round}} 轮 / 共 {{maxRounds}} 轮</view>
+  </view>
+
+  <!-- 对话区 -->
+  <scroll-view scroll-y="true" class="chat-area" scroll-into-view="msg-{{lastMsgId}}">
+    <view class="msg-list">
+      <view wx:for="{{messages}}" wx:key="id" id="msg-{{item.id}}" class="msg-row {{item.role}}">
+        <view class="msg-avatar {{item.role}}">{{item.role === 'ai' ? '🤖' : '👤'}}</view>
+        <view class="msg-bubble {{item.role}}">
+          <text>{{item.content}}</text>
+          <view wx:if="{{item.options && item.options.length}}" class="msg-options">
+            <view
+              wx:for="{{item.options}}"
+              wx:for-item="opt"
+              wx:key="*this"
+              class="opt-btn"
+              data-msgid="{{item.id}}"
+              data-option="{{opt}}"
+              bindtap="chooseOption"
+            >{{opt}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{loading}}" class="msg-row ai">
+        <view class="msg-avatar ai">🤖</view>
+        <view class="msg-bubble ai typing">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 摘要 -->
+  <view wx:if="{{summary}}" class="summary-card">
+    <view class="summary-head">
+      <text>📑 AI 预问诊摘要</text>
+      <text class="urgency-{{summary.urgency}}">{{summary.urgency === 'high' ? '⚠️ 紧急' : (summary.urgency === 'mid' ? '中等' : '常规')}}</text>
+    </view>
+    <view class="summary-row"><text class="label">主诉</text><text>{{summary.chief_complaint}}</text></view>
+    <view class="summary-row"><text class="label">现病史</text><text>{{summary.history}}</text></view>
+    <view class="summary-row"><text class="label">推荐科室</text><text class="theme-primary">{{summary.suggested_dept}}</text></view>
+    <view class="summary-row"><text class="label">可能诊断</text>
+      <view class="tag-list">
+        <text wx:for="{{summary.possible_diagnoses}}" wx:key="*this" class="tag tag-blue">{{item}}</text>
+      </view>
+    </view>
+    <view class="summary-row"><text class="label">建议检查</text>
+      <view class="tag-list">
+        <text wx:for="{{summary.suggested_tests}}" wx:key="*this" class="tag tag-teal">{{item}}</text>
+      </view>
+    </view>
+    <view wx:if="{{summary.warning}}" class="warning-box">⚠️ {{summary.warning}}</view>
+
+    <view class="summary-actions">
+      <button class="btn-ghost" bindtap="restart">重新问诊</button>
+      <button class="btn-primary" bindtap="goBook">预约 {{summary.suggested_dept}}</button>
+    </view>
+  </view>
+
+  <!-- 输入区 -->
+  <view wx:if="{{!summary}}" class="input-area">
+    <input
+      class="input-box"
+      placeholder="或直接输入您的回答..."
+      value="{{inputText}}"
+      bindinput="onInput"
+      bindconfirm="sendMessage"
+      confirm-type="send"
+      adjust-position="{{true}}"
+    />
+    <view class="voice-btn" bindtap="voiceTip">🎤</view>
+    <view class="send-btn" bindtap="sendMessage">发送</view>
+  </view>
+</view>

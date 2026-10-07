@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医生工作台 · MedMind Nexus</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="../assets/js/api.js"></script>
+<style>
+  .schedule-card{padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;display:flex;gap:10px;align-items:center;background:#fff}
+  .schedule-card.now{border-color:var(--primary);background:#F0FDFA}
+  .schedule-card .time{font-weight:700;font-size:13px;color:var(--primary);min-width:50px}
+  .schedule-card .pn{font-weight:600;font-size:14px}
+  .schedule-card .info{font-size:12px;color:var(--muted);margin-top:2px}
+  .ai-summary{font-size:11px;color:#0F766E;background:#F0FDFA;padding:3px 8px;border-radius:99px;border:1px solid #CCFBF1;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">医生端 · v1.0</div></div></div>
+    <div class="group">主要功能</div>
+    <a class="nav active" href="workbench.html"><span>🏠</span>工作台</a>
+    <a class="nav" href="consultation.html"><span>🎙️</span>AI 诊间助手</a>
+    <a class="nav" href="records.html"><span>📋</span>病历管理</a>
+    <a class="nav" href="diagnosis.html"><span>🧠</span>AI 诊断辅助</a>
+    <a class="nav" href="prescription.html"><span>💊</span>处方管理</a>
+    <a class="nav" href="quality.html"><span>✅</span>病历质控</a>
+    <div class="group">其他</div>
+    <a class="nav"><span>📊</span>工作量统计</a>
+    <a class="nav"><span>⚙️</span>设置</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">医生端 / 工作台</div>
+      <div class="demo-banner">🔬 演示模式 · 数据均为脱敏样例</div>
+      <div class="user"><div class="avatar">张</div><div><div style="font-weight:600;font-size:13px">张为民 主任医师</div><div style="font-size:11px;color:var(--muted)">心内科 · 三级医院</div></div></div>
+    </div>
+    <div class="content">
+      <h1 class="page-title">👋 早上好，张医生</h1>
+      <p class="page-sub">2026 年 6 月 11 日 · 周四 · 今日预约 12 位患者 · 已完成 4 位</p>
+      <div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="stat"><div class="label">今日预约</div><div class="value">12</div><div class="delta up">↑ 较昨日 +2</div></div>
+        <div class="stat"><div class="label">AI 病历生成</div><div class="value">26 <span style="font-size:12px;color:var(--muted)">份/本周</span></div><div class="delta up">↑ 节省 13h 文书时间</div></div>
+        <div class="stat"><div class="label">AI 建议采纳率</div><div class="value">78.4%</div><div class="delta up">↑ 高于科室 4.2%</div></div>
+        <div class="stat"><div class="label">待审核项</div><div class="value" style="color:#F59E0B">5</div><div class="delta">3 处方 + 2 病历</div></div>
+      </div>
+      <div class="grid" style="grid-template-columns:1.4fr 1fr">
+        <div class="card">
+          <h3><span class="dot"></span> 今日预约</h3>
+          <div class="schedule-card now"><div class="time">14:30</div><div style="flex:1"><div class="pn">李秀芳 · 女 · 56岁</div><div class="info">复诊 · 高血压、高脂血症 · <span class="ai-summary" onclick="alert('AI 预问诊摘要（SOAP）\nS 主诉：反复胸痛 3 天，劳累后明显，压榨样痛\nO 伴出汗、左肩放射痛，硝酸甘油可缓解\nA 高度怀疑不稳定型心绞痛 / 心肌缺血\nP 建议心电图、心肌酶谱、肌钙蛋白检查\n紧急黄色预警 · 置信度 92%')">🤖 AI 预问诊摘要</span></div></div><a class="btn btn-primary btn-sm" href="consultation.html">开始问诊 →</a></div>
+          <div class="schedule-card"><div class="time">15:00</div><div style="flex:1"><div class="pn">王志强 · 男 · 48岁</div><div class="info">初诊 · 胸闷气短 · <span class="ai-summary">🤖 AI 预问诊摘要</span></div></div><a class="btn btn-sm">查看</a></div>
+          <div class="schedule-card"><div class="time">15:30</div><div style="flex:1"><div class="pn">陈丽 · 女 · 62岁</div><div class="info">复诊 · 房颤 · 抗凝随访 · <span class="ai-summary">🤖 AI 摘要</span></div></div><a class="btn btn-sm">查看</a></div>
+          <div class="schedule-card"><div class="time">16:00</div><div style="flex:1"><div class="pn">刘建国 · 男 · 55岁</div><div class="info">复诊 · 冠脉支架术后 1 月</div></div><a class="btn btn-sm">查看</a></div>
+          <div class="schedule-card"><div class="time">16:30</div><div style="flex:1"><div class="pn">赵梅 · 女 · 67岁</div><div class="info">复诊 · 心衰 NYHA II 级</div></div><a class="btn btn-sm">查看</a></div>
+          <a class="btn btn-ghost btn-sm" style="display:block;text-align:center;width:100%;margin-top:8px;color:var(--primary)">查看全部 12 位预约 →</a>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 待审核项</h3>
+          <div class="alert amber" style="margin-bottom:10px">⚠️ <b>3 张处方</b> 需要您审核（AI 已预审，标记可能存在配伍问题）</div>
+          <table>
+            <tr><th>患者</th><th>药品</th><th>AI 标记</th></tr>
+            <tr><td>李秀芳</td><td>阿托伐他汀</td><td><span class="tag green">✓ 合规</span></td></tr>
+            <tr><td>王志强</td><td>氯吡格雷+阿司匹林</td><td><span class="tag amber">⚠ 出血风险</span></td></tr>
+            <tr><td>陈丽</td><td>华法林+维生素 K</td><td><span class="tag red">✗ 拮抗</span></td></tr>
+          </table>
+          <hr>
+          <div class="alert blue">📋 <b>2 份 AI 病历草稿</b> 待您审核签字</div>
+          <ul style="padding-left:18px;margin:8px 0;font-size:13px;color:#475569"><li>李秀芳 · 心绞痛复诊 · <a>查看 →</a></li><li>赵梅 · 心衰随访 · <a>查看 →</a></li></ul>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">
+        <div class="card">
+          <h3><span class="dot"></span> AI 智能推荐</h3>
+          <div class="alert green" style="margin-bottom:8px">💡 <b>新版指南推送</b>：2026 ESC《慢性冠脉综合征管理指南》已更新，对您当前在管 12 位冠心病患者的治疗方案有 3 处推荐变更，<a>查看详情 →</a></div>
+          <div class="alert blue" style="margin-bottom:8px">📚 <b>相关文献推荐</b>：基于您正在处理的"不稳定型心绞痛"病例，推荐 NEJM 2026 最新综述 <a>《Acute Coronary Syndromes: 2026 Update》</a></div>
+          <div class="alert amber">🎯 <b>科室质控</b>：本周您的病历质控评分 <b>96.2 分</b>（科室平均 92.8 分），👏 加油保持！</div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 本月 AI 使用情况</h3>
+          <table>
+            <tr><th>AI 功能</th><th>使用次数</th><th>节省时间</th></tr>
+            <tr><td>实时语音病历</td><td>62 次</td><td>31 小时</td></tr>
+            <tr><td>AI 诊断辅助</td><td>48 次</td><td>—</td></tr>
+            <tr><td>处方审核</td><td>156 次</td><td>5.2 小时</td></tr>
+            <tr><td>文献检索</td><td>22 次</td><td>11 小时</td></tr>
+            <tr><td>报告解读</td><td>34 次</td><td>—</td></tr>
+          </table>
+          <div class="alert green" style="margin-top:10px">✨ 本月您借助 AI 累计节省 <b>47.2 小时</b>，相当于多看 <b>118 位</b> 患者！</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// 挂载后端状态徽章
+document.addEventListener('DOMContentLoaded', async () => {
+  MedMind.mountStatusBadge();
+  // 拉取医生今日排班 (从 /v1/demo/doctor-schedule)
+  try {
+    const list = await MedMind.Demo.doctorSchedule();
+    console.log('[医生排班]', list.length, '位');
+  } catch (e) { console.warn('排班加载失败:', e.message); }
+  // 加载当前医生信息 (如已登录)
+  if (MedMind.Auth.isLoggedIn()) {
+    const u = MedMind.Auth.getUser();
+    if (u && u.full_name) {
+      const av = document.querySelector('.topbar .user .avatar');
+      const nameEl = document.querySelector('.topbar .user div div');
+      if (av) av.textContent = u.full_name.charAt(0);
+      if (nameEl) nameEl.textContent = u.full_name + ' ' + (u.role==='doctor' ? '医师' : '');
+    }
+  } else {
+    MedMind.toast('当前未登录,以演示模式查看。 <a href="../login.html" style="color:#0F766E">去登录</a>');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>科研统计分析 · MedMind 科研端</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  .code-block{background:#0F172A;color:#E2E8F0;padding:14px;border-radius:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .code-block .kw{color:#67E8F9}.code-block .str{color:#FCA5A5}.code-block .cm{color:#94A3B8}
+</style>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/live-enhance.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">科研端 · v1.0</div></div></div>
+    <a class="nav" href="literature.html"><span>🔍</span>文献检索</a>
+    <a class="nav active" href="statistics.html"><span>📊</span>统计分析</a>
+    <a class="nav" href="grant.html"><span>📝</span>标书生成</a>
+    <a class="nav" href="paper.html"><span>📚</span>论文写作</a>
+    <a class="nav"><span>📂</span>项目管理</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">科研端 / AI 统计分析</div><div class="demo-banner">📊 演示模式</div><div class="user"><div class="avatar">赵</div><div><div style="font-weight:600;font-size:13px">赵教授</div><div style="font-size:11px;color:var(--muted)">心内科 · 博导</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">📊 AI 辅助统计分析</h1>
+      <p class="page-sub">告诉 AI 您的研究问题，AI 自动推荐统计方法、生成 R/Python 代码、运行并解读结果</p>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:18px">
+        <div class="card">
+          <h3><span class="dot"></span> 1️⃣ 您的研究问题</h3>
+          <textarea style="min-height:80px">我有一项前瞻性队列研究，纳入 268 例 CAD+T2DM 患者，分为 SGLT2i 治疗组（n=132）和对照组（n=136）。随访 24 个月，主要终点是 MACE（包括心血管死亡、非致死性心梗、非致死性卒中）。如何分析两组 MACE 的差异？需要校正年龄、性别、基线 LDL 等混杂因素。</textarea>
+          <div style="font-size:13px;color:#475569;margin-top:10px">📁 已上传数据：<b>cad_t2dm_cohort.csv</b>（268 行 × 24 列）</div>
+          <div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-primary">⚡ AI 推荐方法</button><button class="btn">📁 重新上传</button></div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 2️⃣ AI 推荐的统计方法</h3>
+          <div class="alert blue">🤖 基于您的研究问题（生存分析 + 多变量调整 + 队列研究），AI 推荐以下方法组合：</div>
+          <table>
+            <tr><th>分析</th><th>方法</th><th>用途</th></tr>
+            <tr><td>基线比较</td><td><b>t / χ² / Mann-Whitney</b></td><td>检验组间基线均衡</td></tr>
+            <tr><td>生存分析</td><td><b>Kaplan-Meier + Log-rank</b></td><td>初步评估两组 MACE</td></tr>
+            <tr><td>多变量调整</td><td><b>Cox 比例风险回归</b></td><td>校正混杂因素</td></tr>
+            <tr><td>检验比例风险假设</td><td><b>Schoenfeld 残差</b></td><td>验证 Cox 模型适用性</td></tr>
+            <tr><td>敏感性分析</td><td><b>倾向评分匹配 PSM</b></td><td>减少选择偏倚</td></tr>
+            <tr><td>样本量与功效</td><td><b>事后功效分析</b></td><td>评估研究效能</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:18px">
+        <h3><span class="dot"></span> 3️⃣ AI 生成的 R 代码</h3>
+        <div class="code-block"><span class="cm"># Step 1: 加载数据与包</span>
+<span class="kw">library</span>(survival); <span class="kw">library</span>(survminer); <span class="kw">library</span>(MatchIt)
+df &lt;- <span class="kw">read.csv</span>(<span class="str">"cad_t2dm_cohort.csv"</span>)
+
+<span class="cm"># Step 2: 基线特征比较</span>
+<span class="kw">library</span>(tableone)
+vars &lt;- <span class="kw">c</span>(<span class="str">"age"</span>, <span class="str">"sex"</span>, <span class="str">"bmi"</span>, <span class="str">"ldl"</span>, <span class="str">"hba1c"</span>, <span class="str">"smoking"</span>)
+tab1 &lt;- <span class="kw">CreateTableOne</span>(vars=vars, strata=<span class="str">"group"</span>, data=df, test=TRUE)
+<span class="kw">print</span>(tab1, smd=TRUE)
+
+<span class="cm"># Step 3: Kaplan-Meier 生存曲线</span>
+km &lt;- <span class="kw">survfit</span>(<span class="kw">Surv</span>(time, mace) ~ group, data=df)
+<span class="kw">ggsurvplot</span>(km, data=df, pval=TRUE, conf.int=TRUE,
+           risk.table=TRUE, xlab=<span class="str">"Months"</span>, ylab=<span class="str">"MACE-free survival"</span>)
+
+<span class="cm"># Step 4: Cox 比例风险回归（多变量调整）</span>
+cox &lt;- <span class="kw">coxph</span>(<span class="kw">Surv</span>(time, mace) ~ group + age + sex + ldl + hba1c + smoking, data=df)
+<span class="kw">summary</span>(cox)
+
+<span class="cm"># Step 5: 检验 PH 假设</span>
+<span class="kw">cox.zph</span>(cox)
+
+<span class="cm"># Step 6: 倾向评分匹配（敏感性分析）</span>
+m &lt;- <span class="kw">matchit</span>(group ~ age + sex + bmi + ldl + hba1c, data=df, method=<span class="str">"nearest"</span>, ratio=1)
+matched_df &lt;- <span class="kw">match.data</span>(m)
+cox_psm &lt;- <span class="kw">coxph</span>(<span class="kw">Surv</span>(time, mace) ~ group, data=matched_df)
+<span class="kw">summary</span>(cox_psm)</div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary">▶ 运行</button><button class="btn">📋 复制代码</button><button class="btn">🐍 转 Python (lifelines)</button><button class="btn">📝 一键生成方法学描述</button></div>
+      </div>
+      <div class="grid" style="grid-template-columns:1.3fr 1fr;margin-bottom:18px">
+        <div class="card">
+          <h3><span class="dot"></span> 4️⃣ Kaplan-Meier 生存曲线</h3>
+          <canvas id="kmChart" height="190"></canvas>
+          <div class="alert green" style="margin-top:10px;font-size:13px"><b>Log-rank P &lt; 0.001</b> · SGLT2i 组 24 个月 MACE 累积发生率 12.3%，对照组 23.8%。</div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 5️⃣ 多变量 Cox 结果</h3>
+          <table style="font-size:13px">
+            <tr><th>变量</th><th>HR</th><th>95% CI</th><th>P</th></tr>
+            <tr><td><b>SGLT2i（vs 对照）</b></td><td><b style="color:#0F766E">0.52</b></td><td>0.34-0.79</td><td><b>&lt;0.001</b></td></tr>
+            <tr><td>年龄（每 5 岁）</td><td>1.18</td><td>1.06-1.32</td><td>0.003</td></tr>
+            <tr><td>性别（女）</td><td>0.82</td><td>0.58-1.16</td><td>0.26</td></tr>
+            <tr><td>LDL-C（每 mmol/L）</td><td>1.24</td><td>1.08-1.42</td><td>0.002</td></tr>
+            <tr><td>HbA1c（每 1%）</td><td>1.16</td><td>1.04-1.29</td><td>0.008</td></tr>
+            <tr><td>吸烟（是）</td><td>1.46</td><td>1.02-2.09</td><td>0.038</td></tr>
+          </table>
+          <div class="alert blue" style="margin-top:10px;font-size:12px">✅ PH 假设全局检验 P = 0.42，模型适用。</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="dot"></span> 6️⃣ AI 自动撰写的统计学描述（可直接放入论文方法部分）</h3>
+        <div style="font-size:13px;color:#475569;line-height:1.85;padding:8px;background:#F8FAFC;border-radius:10px;border:1px solid var(--border)">
+          <b>Statistical Analysis.</b><br>
+          Continuous variables were expressed as mean ± standard deviation or median (interquartile range) and compared using Student's t-test or the Mann-Whitney U test as appropriate. Categorical variables were expressed as numbers (percentages) and compared using the chi-square test or Fisher's exact test.<br><br>
+          The cumulative incidence of MACE was estimated using the Kaplan-Meier method, and between-group differences were assessed by the log-rank test. Multivariable Cox proportional hazards regression was used to estimate hazard ratios (HRs) and 95% confidence intervals (CIs) for MACE, adjusting for age, sex, baseline LDL-C, HbA1c, and smoking status. The proportional hazards assumption was verified using scaled Schoenfeld residuals.<br><br>
+          To minimize confounding by indication, propensity score matching (1:1 nearest neighbor without replacement) was performed as a sensitivity analysis. Two-sided P values &lt; 0.05 were considered statistically significant. All analyses were performed using R version 4.4.0.
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary">📋 复制到论文</button><button class="btn">中文翻译</button><button class="btn">📥 导出 Word</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('kmChart'),{type:'line',data:{labels:['0','3','6','9','12','15','18','21','24'],datasets:[{label:'SGLT2i 组（n=132）',data:[100,98.2,96.4,94.6,92.4,90.8,89.6,88.8,87.7],borderColor:'#0EA5A4',backgroundColor:'rgba(14,165,164,.1)',tension:0,stepped:'before',fill:true},{label:'对照组（n=136）',data:[100,96.8,93.2,89.8,86.4,83.2,80.4,78.0,76.2],borderColor:'#EF4444',backgroundColor:'rgba(239,68,68,.1)',tension:0,stepped:'before',fill:true}]},options:{plugins:{legend:{position:'top'}},scales:{x:{title:{display:true,text:'Months'}},y:{title:{display:true,text:'MACE-free survival (%)'},min:70,max:100}}}});
+</script>
+</body>
+</html>

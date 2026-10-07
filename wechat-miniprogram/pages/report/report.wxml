@@ -1,0 +1,63 @@
+<!-- 报告AI解读 -->
+<view class="report-page">
+  <view class="card">
+    <view class="card-title">📋 上传报告 · AI 一键解读</view>
+    <view class="card-subtitle">支持血常规 / 肝肾功能 / 心电图 / 影像报告等</view>
+    <view class="upload-area" bindtap="chooseImage">
+      <view class="upload-icon">📤</view>
+      <view class="upload-text">点击拍照或从相册选择</view>
+      <view class="upload-tip">JPG/PNG/PDF · ≤10MB · 自动 OCR</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-box">
+    <view class="spinner"></view>
+    <text>AI 正在解读, 请稍候 (约 8 秒)...</text>
+  </view>
+
+  <view wx:if="{{result}}" class="result-area">
+    <!-- 标题 -->
+    <view class="card">
+      <view class="result-head">
+        <view class="report-type">{{result.report_type}}</view>
+        <view class="tag tag-{{result.abnormal_items.length > 0 ? 'yellow' : 'green'}}">
+          {{result.abnormal_items.length > 0 ? result.abnormal_items.length + ' 项异常' : '全部正常'}}
+        </view>
+      </view>
+
+      <!-- AI 通俗总结 -->
+      <view class="summary-box">
+        <view class="summary-head">💡 AI 通俗解读</view>
+        <view class="summary-text">{{result.ai_summary}}</view>
+      </view>
+    </view>
+
+    <!-- 异常项列表 -->
+    <view wx:if="{{result.abnormal_items.length > 0}}" class="card">
+      <view class="section-h">⚠️ 异常项详情</view>
+      <view wx:for="{{result.abnormal_items}}" wx:key="name" class="item-row">
+        <view class="item-row-top">
+          <text class="item-name">{{item.name}}</text>
+          <text class="item-value flag-{{item.flag}}">{{item.value}} {{item.unit}} {{item.flag === 'high' ? '↑' : '↓'}}</text>
+        </view>
+        <view class="item-ref">参考范围: {{item.ref}} {{item.unit}}</view>
+        <view class="item-explain">📝 {{item.explain}}</view>
+      </view>
+    </view>
+
+    <!-- 建议 -->
+    <view class="card">
+      <view class="section-h">💊 健康建议</view>
+      <view wx:for="{{result.suggestions}}" wx:key="*this" class="suggest-row">
+        <view class="suggest-dot">{{index + 1}}</view>
+        <view class="suggest-text">{{item}}</view>
+      </view>
+    </view>
+
+    <view class="disclaimer">⚠️ {{result.disclaimer}}</view>
+
+    <view class="action-row">
+      <button class="btn-primary" bindtap="reset">解读新报告</button>
+    </view>
+  </view>
+</view>

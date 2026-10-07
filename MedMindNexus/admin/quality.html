@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医疗质控看板 · MedMind Nexus 管理端</title>
+<link rel="stylesheet" href="../assets/css/common.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body{background:#0F172A;color:#E2E8F0}
+  .topbar{background:#1E293B;border-bottom:1px solid #334155}.topbar .crumb{color:#94A3B8}.topbar .user{color:#E2E8F0}
+  .content{background:#0B1326}.page-title{color:#fff}.page-sub{color:#94A3B8}
+  .card{background:#1E293B;border:1px solid #334155;color:#E2E8F0}.card h3{color:#fff}.card h3 .dot{background:#22D3EE}
+  .stat{background:#1E293B;border:1px solid #334155}.stat .label{color:#94A3B8}.stat .value{color:#fff}
+  table{color:#CBD5E1}th{background:#0F172A;color:#94A3B8;border-bottom:1px solid #334155}td{border-bottom:1px solid #334155}tr:hover td{background:#162038}
+  .tag{background:#334155;color:#CBD5E1}.tag.green{background:rgba(16,185,129,.2);color:#34D399}.tag.red{background:rgba(239,68,68,.2);color:#F87171}.tag.amber{background:rgba(245,158,11,.2);color:#FBBF24}
+  .alert.green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:#86EFAC}.alert.amber{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#FCD34D}.alert.red{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#FCA5A5}
+</style>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/live-enhance.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">M</div><div><div class="name">MedMind</div><div class="sub">管理端 · 驾驶舱</div></div></div>
+    <div class="group">运营管理</div>
+    <a class="nav" href="dashboard.html"><span>📊</span>运营驾驶舱</a>
+    <a class="nav" href="drg.html"><span>💰</span>DRG/DIP 控费</a>
+    <a class="nav active" href="quality.html"><span>✅</span>医疗质控</a>
+    <a class="nav" href="ai-analytics.html"><span>🤖</span>AI 使用分析</a>
+    <a class="nav" href="../index.html"><span>↩️</span>返回官网</a>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div class="crumb">管理端 / 医疗质控</div><div class="demo-banner">📊 演示数据</div><div class="user"><div class="avatar">李</div><div><div style="font-weight:600;font-size:13px;color:#fff">李院长</div><div style="font-size:11px;color:#94A3B8">第一人民医院</div></div></div></div>
+    <div class="content">
+      <h1 class="page-title">✅ 医疗质量质控看板</h1>
+      <p class="page-sub">围绕国家卫健委 65 项医疗质量指标 + AI 智能识别异常案例</p>
+      <div class="grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:18px">
+        <div class="stat"><div class="label">病历甲级率</div><div class="value">96.4%</div><div class="delta up">↑ 国标 ≥90%</div></div>
+        <div class="stat"><div class="label">抗菌药物使用率</div><div class="value">42.8%</div><div class="delta up">↓ 国标 &lt;60%</div></div>
+        <div class="stat"><div class="label">手卫生执行率</div><div class="value">94.2%</div><div class="delta up">↑ 较月初 +2.1%</div></div>
+        <div class="stat"><div class="label">医院感染率</div><div class="value">1.2%</div><div class="delta up">↓ 国标 &lt;5%</div></div>
+        <div class="stat"><div class="label">不良事件</div><div class="value">3</div><div class="delta">本月已处理 2 起</div></div>
+      </div>
+      <div class="grid" style="grid-template-columns:1.5fr 1fr">
+        <div class="card"><h3><span class="dot"></span> 📈 核心质控指标趋势（近 6 个月）</h3><canvas id="qcTrend" height="120"></canvas></div>
+        <div class="card"><h3><span class="dot"></span> 🎯 五大维度雷达图</h3><canvas id="qcRadar" height="120"></canvas></div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3><span class="dot"></span> ⚠️ AI 发现的质控问题（本周）</h3>
+        <table>
+          <tr><th>时间</th><th>问题类型</th><th>所属</th><th>详情</th><th>严重度</th><th>状态</th></tr>
+          <tr><td>06-11</td><td>抗生素超长使用</td><td>外科 张主任</td><td>头孢曲松连用 14 天，超过指南推荐 7 天</td><td><span class="tag amber">中</span></td><td>已通知</td></tr>
+          <tr><td>06-10</td><td>病历缺失</td><td>内科 王医生</td><td>3 份首程病程录漏写体征</td><td><span class="tag amber">中</span></td><td>已整改</td></tr>
+          <tr><td>06-10</td><td>手术风险评估缺失</td><td>骨科 赵医生</td><td>1 例髋关节置换术前未评估 VTE 风险</td><td><span class="tag red">高</span></td><td>整改中</td></tr>
+          <tr><td>06-09</td><td>医嘱不规范</td><td>儿科 陈医生</td><td>"必要时"医嘱未注明具体指征</td><td><span class="tag">低</span></td><td>已整改</td></tr>
+          <tr><td>06-08</td><td>药物相互作用未提示</td><td>心内 李医生</td><td>华法林+阿司匹林联用未在病程标注</td><td><span class="tag amber">中</span></td><td>已整改</td></tr>
+          <tr><td>06-08</td><td>抢救记录不完整</td><td>急诊 王医生</td><td>抢救时间节点记录有 2 处空白</td><td><span class="tag red">高</span></td><td>已整改</td></tr>
+        </table>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">
+        <div class="card">
+          <h3><span class="dot"></span> 💊 合理用药监测</h3>
+          <table>
+            <tr><th>指标</th><th>本月</th><th>标准</th><th>状态</th></tr>
+            <tr><td>抗菌药物使用率</td><td>42.8%</td><td>&lt;60%</td><td><span class="tag green">达标</span></td></tr>
+            <tr><td>I 类切口抗菌药物预防使用率</td><td>28.2%</td><td>&lt;30%</td><td><span class="tag green">达标</span></td></tr>
+            <tr><td>抗菌药物 DDD</td><td>38.5</td><td>&lt;40</td><td><span class="tag green">达标</span></td></tr>
+            <tr><td>限制级抗菌药物使用比</td><td>12.4%</td><td>&lt;15%</td><td><span class="tag green">达标</span></td></tr>
+            <tr><td>处方点评不合理率</td><td>2.8%</td><td>&lt;3%</td><td><span class="tag green">达标</span></td></tr>
+            <tr><td>辅助用药占比</td><td>18.6%</td><td>&lt;20%</td><td><span class="tag amber">关注</span></td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> 🏥 院感监测</h3>
+          <table>
+            <tr><th>指标</th><th>本月</th><th>标准</th><th>趋势</th></tr>
+            <tr><td>医院感染率</td><td>1.2%</td><td>&lt;5%</td><td>→</td></tr>
+            <tr><td>呼吸机相关肺炎</td><td>0.8‰</td><td>&lt;2‰</td><td>↘</td></tr>
+            <tr><td>导管相关血流感染</td><td>0.4‰</td><td>&lt;2‰</td><td>↘</td></tr>
+            <tr><td>导尿管相关泌尿感染</td><td>0.6‰</td><td>&lt;3‰</td><td>→</td></tr>
+            <tr><td>手术部位感染</td><td>1.8%</td><td>&lt;3%</td><td>↘</td></tr>
+            <tr><td>多重耐药菌检出率</td><td>4.2%</td><td>&lt;6%</td><td>→</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+Chart.defaults.color='#94A3B8';
+new Chart(document.getElementById('qcTrend'),{type:'line',data:{labels:['1月','2月','3月','4月','5月','6月'],datasets:[{label:'病历甲级率(%)',data:[91.2,92.5,93.8,94.6,95.3,96.4],borderColor:'#22D3EE',tension:.35},{label:'抗菌药使用率(%)',data:[58,55,52,48,45,42.8],borderColor:'#A78BFA',tension:.35},{label:'手卫生(%)',data:[88,90,91.5,92,93.2,94.2],borderColor:'#34D399',tension:.35},{label:'感染率(%)',data:[2.4,2.1,1.8,1.5,1.3,1.2],borderColor:'#F472B6',tension:.35}]},options:{plugins:{legend:{position:'top'}}}});
+new Chart(document.getElementById('qcRadar'),{type:'radar',data:{labels:['病历质量','合理用药','院感控制','护理质量','手术安全'],datasets:[{label:'本月评分',data:[96,94,93,95,91],borderColor:'#22D3EE',backgroundColor:'rgba(34,211,238,.18)'},{label:'国标基准',data:[90,85,90,88,88],borderColor:'#F87171',backgroundColor:'rgba(248,113,113,.12)'}]},options:{scales:{r:{ticks:{display:false},pointLabels:{color:'#94A3B8'},grid:{color:'#334155'},angleLines:{color:'#334155'}}}}});
+</script>
+</body>
+</html>
